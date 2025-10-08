@@ -25,9 +25,11 @@ This repository contains the official implementation of the "Cooking Task Planni
 
 ## Citation
 If you find our work helpful, please consider citing:
+```bibtex
 @article{takebayashi2025cooking,
   title={Cooking Task Planning using LLM and Verified by Graph Network},
   author={Takebayashi, Ryunosuke and Isume, Vitor Hideyo and Kiyokawa, Takuya and Wan, Weiwei and Harada, Kensuke},
   journal={arXiv preprint arXiv:2503.21564},
   year={2025}
 }
+```
