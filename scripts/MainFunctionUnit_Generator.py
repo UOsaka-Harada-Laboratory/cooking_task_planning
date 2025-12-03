@@ -1,28 +1,21 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jul 23 21:04:37 2024
-
-@author: user
-"""
-from graphviz import Digraph
-import File_management as Fm
-import GPT_manipulation as GPT
-import re
-import networkx as nx
-import matplotlib.pyplot as plt
-from networkx.drawing.nx_agraph import graphviz_layout
 import ast
+import re
+import os
+import pickle
+import networkx as nx
+import GPT_manipulation as GPT
+import matplotlib.pyplot as plt
 
+from graphviz import Digraph
+from networkx.drawing.nx_agraph import graphviz_layout
 
 class MainFunctionUnit_Generator():
     def __init__(self):
-        ###メイン機能ユニットを格納するための変数
         self.G_list = []
         self.gpt = GPT.GPT_manipulation()
         self.Target_Object_list = []
         self.save_folder_path = ''
-        
-    # ファイル名から数字を抽出する関数
+
     def extract_number(self, filename):
         match = re.search(r'(\d+)', filename)
         return int(match.group(1)) if match else None
@@ -30,7 +23,7 @@ class MainFunctionUnit_Generator():
     def word2code(self, ans):
         data = ast.literal_eval(ans)
         return data
-    
+        
     def Object_Creation_Error_Detector(self, ans):
         # input(type(ans[0]['object']))
         if type(ans[0]['object']) == 'list':
@@ -41,27 +34,23 @@ class MainFunctionUnit_Generator():
                     responce = self.gpt.GPT4o_exe()
                     return False, responce
         return True, ans
-                    
     
     def estimateTargetState(self, img_list, prompt_path, save_file_path, word_list, save_folder_path):
-        pickle_file_path = Fm.get_filename_from_folder(save_folder_path)
-        # input(pickle_file_path)
+        pickle_file_path = sorted(os.listdir(save_folder_path))
         if pickle_file_path is not None:
             if "Target_Object_list.pickle" in pickle_file_path:
-                self.Target_Object_list = Fm.load_pickle_file(Fm.join_path_and_filename(save_folder_path, "Target_Object_list.pickle"))
+                with open(os.path.join(save_folder_path, "Target_Object_list.pickle")) as file:
+                    self.Target_Object_list = pickle.load(file)
                 list_num = len(self.Target_Object_list)
-                # input(self.Target_Object_list)
             else:
-                # input('なし')
                 list_num=0
         else:
-            # input('なし')
             list_num=0
 
         for i, img_name in enumerate(sorted(img_list, key=self.extract_number)[list_num:]):
             i = i + list_num
             print(f"\n-----------------{i+1}/{len(img_list)}-----------------\n")
-            img_path = Fm.join_path_and_filename(input_folder, img_name)
+            img_path = os.path.join(input_folder, img_name)
             ###gptによる目標オブジェクト状態推定
             if i == 0:
                 self.gpt.text2prompt(prompt_path, save_file_path)
@@ -82,50 +71,60 @@ class MainFunctionUnit_Generator():
                 input(ans)
             ###文字のコード化処理
             self.Target_Object_list.append([img_name, ans])
-            Fm.save_pickle_file(save_folder_path, 'Target_Object_list.pickle', self.Target_Object_list)
+            
+            os.makedirs(save_folder_path, exist_ok=True)
+    
+            # Define the file path
+            file_path = os.path.join(save_folder_path, 'Target_Object_list.pickle')
+    
+            # Save the mes object to the file
+            with open(file_path, 'wb') as file:
+                pickle.dump(self.Target_Object_list, file)
         
+            print(f"Data saved to {file_path}")
+
     def Graph_visualization(self, dot, file_name, ignore_empty=True):
         # NetworkXグラフからGraphvizのグラフに変換
         A = nx.nx_agraph.to_agraph(dot)
-    
+
         # ノードの属性を追加
         for node in A.nodes():
             node_attr = A.get_node(node).attr
             attributes = dot.nodes[node]
-    
+
             # 属性のtypeが'motion'の場合の処理
             if attributes.get('type') == 'motion':
                 node_attr['shape'] = 'ellipse'
             else:
                 node_attr['shape'] = 'rectangle'  # デフォルトの形状
-    
+
             # ラベルの設定
             valid_labels = [
                 f"{key}: {value}" for key, value in attributes.items()
                 if key in ['label', 'ingredients', 'physical_state', 'cutting_style', 
-                           'cooking_method', 'container', 'place', 'machine', 'equipment_status']
+                            'cooking_method', 'container', 'place', 'machine', 'equipment_status']
                 and (not ignore_empty or value not in ([], ''))  # ignore_empty=Trueなら空リストや空文字を除外
             ]
             if valid_labels:
                 node_attr['label'] = "\n".join(valid_labels)
-    
+
             node_attr['style'] = 'filled'
             node_attr['fillcolor'] = 'lightblue'
             node_attr['fontcolor'] = 'black'
             node_attr['fontsize'] = '14'
-    
+
         # エッジの属性を追加
         for u, v, data in dot.edges(data=True):
             if 'weight' in data:
                 A.get_edge(u, v).attr['label'] = f"Weight: {data['weight']}"
                 A.get_edge(u, v).attr['fontsize'] = '12'  # エッジラベルのフォントサイズ
-    
+
         # レイアウトを指定（例: dot、neato、fdpなど）
         A.layout(prog='dot')
-    
+
         # グラフ画像をJPEG形式で保存
         A.draw(f"{self.save_folder_path}/{file_name}.eps")
-            
+
     def select_ids_by_object_type(self, obj):
         if obj['type'] == 'ingredients':
             return 'F'
@@ -135,8 +134,7 @@ class MainFunctionUnit_Generator():
             return 'M'
         elif obj['type'] == 'tool':
             return 'T'
-        
-             
+
     def Generate_Target_Object_node(self, object_list, object_ID, motion):
         """
         This function creates object nodes for a FOON using NetworkX.
@@ -219,8 +217,8 @@ class MainFunctionUnit_Generator():
             dot.add_edge(object_ID_num, obj_ID_num)
             
         return dot
-            
     
+##    
     def Target_Object_node(self, Target_Object_list, save_folder_path):
         self.save_folder_path = save_folder_path
         for i, Target_Object in enumerate(Target_Object_list):
@@ -235,7 +233,17 @@ class MainFunctionUnit_Generator():
                 self.G_list.append(self.Generate_Target_Object_node(Target_Object[1][0]['object'], object_ID, Target_Object[1][0]['motion']))
             else:
                 continue
-        Fm.save_pickle_file(save_folder_path, 'G_list.pickle', self.G_list)
+
+        os.makedirs(save_folder_path, exist_ok=True)
+    
+        # Define the file path
+        file_path = os.path.join(save_folder_path, 'G_list.pickle')
+
+        # Save the mes object to the file
+        with open(file_path, 'wb') as file:
+            pickle.dump(self.G_list, file)
+    
+        print(f"Data saved to {file_path}")
     
     def check_same_graph(self, G, H):
         G_node_list = [[G.nodes[k]['label'], G.nodes[k]['id']] for k in G.nodes.keys()]
@@ -278,15 +286,16 @@ class MainFunctionUnit_Generator():
                 
             
     def main(self, input_folder, V_title):
-        file_list = Fm.get_filename_from_folder(input_folder)
+        file_list = os.listdir(input_folder)
         img_list = [i for i in file_list if 'combined_image' in i]
         word_pickle = [i for i in file_list if 'word_dic' in i]
-        word_dic = Fm.load_pickle_file(Fm.join_path_and_filename(input_folder, word_pickle[0]))
+        with open(os.path.join(input_folder, word_pickle[0])) as file:
+            word_dic = pickle.load(file)
         word_list = [word_dic[word][0] for word in word_dic.keys()]
-        prompt_path = Fm.join_path_and_filename(input_folder, '../../../prompt/setup')
-        save_file_path = Fm.join_path_and_filename(prompt_path, '../input_target_object.pickle')
-        Object_list_folder = Fm.join_path_and_filename(input_folder, '../Object_folder')
-        Fm.Create_folder(Object_list_folder)
+        prompt_path = os.path.join(input_folder, '../../../prompt/setup')
+        save_file_path = os.path.join(prompt_path, '../input_target_object.pickle')
+        Object_list_folder = os.path.join(input_folder, '../Object_folder')
+        os.makedirs(Object_list_folder, exist_ok=True)
         # input(word_list)
         # input(f'img_list:{len(img_list)}, word_list:{len(word_list)}')
 
@@ -300,17 +309,36 @@ class MainFunctionUnit_Generator():
         
         # オブジェクトノードの並べ替え
         self.G_list = self.sort_graph(self.G_list)
-        
-        Fm.save_pickle_file(Object_list_folder, 'G_list.pickle', self.G_list)
-        Fm.save_pickle_file(Object_list_folder, 'prompt.pickle', self.gpt.prompt)
+
+        os.makedirs(Object_list_folder, exist_ok=True)
+    
+        # Define the file path
+        file_path = os.path.join(Object_list_folder, 'G_list.pickle')
+    
+        # Save the mes object to the file
+        with open(file_path, 'wb') as file:
+            pickle.dump(self.G_list, file)
+    
+        print(f"Data saved to {file_path}")
+
+        os.makedirs(Object_list_folder, exist_ok=True)
+    
+        # Define the file path
+        file_path = os.path.join(Object_list_folder, 'prompt.pickle')
+    
+        # Save the mes object to the file
+        with open(file_path, 'wb') as file:
+            pickle.dump(self.gpt.prompt, file)
+    
+        print(f"Data saved to {file_path}")
         
         return self.G_list, Object_list_folder
         
 
 if __name__ == '__main__':
     MG = MainFunctionUnit_Generator()
-    input_folder = r'C:/Users/ryuka/research/new_research/images/牛丼_発表用2/GPT4o_input_img'
+    input_folder = './images/GPT4o_input_img'
     V_title = 'ポン酢牛丼'
     MG.main(input_folder, V_title)
     Target_Object_list = MG.Target_Object_list
-    G_list = MG.G_list    
+    G_list = MG.G_list

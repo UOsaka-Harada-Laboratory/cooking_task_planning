@@ -4,11 +4,15 @@ Created on Wed Aug  7 17:52:25 2024
 
 @author: user
 """
-import File_management as Fm
+
 from graphviz import Digraph
 import networkx as nx
 from networkx.drawing.nx_agraph import graphviz_layout
 import random
+import csv
+import os
+import pickle
+import json
 
 
 class EnvObjectNode:
@@ -96,7 +100,20 @@ class EnvObjectNode:
         self.enviroment_node.nodes[ID]['area'] = area
         
     def get_available_area(self, path):
-        points = Fm.load_csv_file(path)
+        points = []
+        with open(path, 'r') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                # Try to convert each item to float if possible
+                converted_row = []
+                for item in row:
+                    try:
+                        converted_item = float(item)
+                    except ValueError:
+                        converted_item = item
+                    converted_row.append(converted_item)
+                points.append(converted_row)
+
         self.r_area = []
         self.l_area = []
         self.b_area = []
@@ -141,13 +158,15 @@ class EnvObjectNode:
         return selected_values
         
     def set_Object_Location(self):
-        ###nodeのテンプレートを呼び出し
-        current_path = Fm.get_current_path()
-        temp_folder = Fm.join_path_and_filename(current_path, 'prompt/template/node.pickle')
-        temp = Fm.load_pickle_file(temp_folder)
+        current_path = os.path.dirname(os.path.abspath(__file__))
+        temp_folder = os.path.join(current_path, 'prompt/template/node.pickle')
+
+        with open(temp_folder, 'rb') as file:
+            temp = pickle.load(file)
+
         obj_num = 0
         
-        self.get_available_area(r'C:/Users/ryuka/research/new_research/wrs_reachability/ave_point2.csv')
+        self.get_available_area('./wrs_reachability/ave_point2.csv')
         
         ###ingredientsノードをセット
             ###液体の材料
@@ -282,16 +301,24 @@ class EnvObjectNode:
         self.set_Object_Location()
         
         ###環境オブジェクトノードを保存
-        Enviroment_folder = Fm.join_path_and_filename(Object_folder, '../Environmental_Object_Node')
-        Fm.save_json_file(Enviroment_folder, 'EO000.json', self.enviroment_node)
-        # self.Graph_visualization(self.enviroment_node, 'graph.jpg', r'C:\Users\user\new_research\images\Few_shot_sample\Environmental_Object_Node')
+        Enviroment_folder = os.path.join(Object_folder, '../Environmental_Object_Node')
+    
+        os.makedirs(Enviroment_folder, exist_ok=True)
+    
+        file_path = os.path.join(Enviroment_folder, 'EO000.json')
+
+        graph_data = nx.node_link_data(self.enviroment_node)
+    
+        # JSONファイルに書き込む
+        with open(file_path, 'w') as json_file:
+            json.dump(graph_data, json_file, indent=4)
         
-        return Fm.join_path_and_filename(Enviroment_folder, 'EO000.json')
+        return os.path.join(Enviroment_folder, 'EO000.json')
         
 if __name__ == '__main__':
-    G = Fm.load_pickle_file(Fm.join_path_and_filename(r'C:/Users/ryuka/research/new_research/images/FOON評価実験用/images_2025_01_21_02_38_47_908151/Object_folder', 'G_list.pickle'))
+    with open(os.path.join("./images/Objects_folder", 'G_list.pickle'), 'rb') as file:
+        G = pickle.load(file)
     EO = EnvObjectNode()
-    Object_folder = r'C:/Users/ryuka/research/new_research/images/FOON評価実験用/images_2025_01_21_02_38_47_908151/Object_folder'
+    Object_folder = "./images/Objects_folder"
     EO_json_path = EO.main(G, Object_folder)
     graph = EO.enviroment_node
-    

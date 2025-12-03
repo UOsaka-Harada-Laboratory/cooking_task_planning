@@ -1,109 +1,102 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jul  4 02:43:55 2024
-
-@author: user
-"""
-import File_management as Fm
-import cv2
 import os
+import cv2
+import datetime
+import pickle
+import shutil
+from PIL import Image
 from sentence_transformers import SentenceTransformer
 
-
 class Video_Analysis:
-    def __init__(self, movie_path, google_json):
-        ###Youtube用
-        self.movie_path = movie_path
-        ###現在のパス
-        self.current_path = Fm.get_current_path()
-        ###google visionのプロジェクトID text-detection2948
+    def __init__(self, video_path, google_json):
+        """
+        video_path: full path of the cooking video to analyze
+        google_json: full path of json file for google credentials to use Vision API
+        """
+        self.video_path = video_path
+        self.current_path = os.path.dirname(os.path.abspath(__file__))
         self.google_vision_json = google_json
-        # モデルのロード
         self.model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
         self.word_list = []
         self.word_dic = {}
         self.error_count = 0
-    
-    def movie2jpg(self, movie_path, output_folder):
-        # 動画ファイルの読み込み
-        cap = cv2.VideoCapture(movie_path)
+
+    def video2jpg(self, output_folder):
+        """
+        Extract frames from original video
+        output_folder: full path where the frames will be saved
+        """ 
+        cap = cv2.VideoCapture(self.video_path)
         fps = cap.get(cv2.CAP_PROP_FPS)
-        input(round(fps))
-        
-        # フレームを1つずつ保存
+        print("Frames per second:", round(fps))
+
         frame_count = 0
         image_count = 0
+
         while True:
             ret, frame = cap.read()
             if not ret:
                 break
             if round(frame_count % (round(fps)/5)) == 0:
-                filename = 'image_' + Fm.get_current_time() + ".jpg"
-                img_path = Fm.join_path_and_filename(output_folder, filename)
+                filename = "image_" + datetime.datetime.now() + ".jpg"
+                img_path = os.path.join(output_folder, filename)
                 cv2.imwrite(img_path, frame)
                 image_count += 1
             frame_count += 1
-        
-        # 動画の総フレーム数を取得
-        print(f'Total images: {image_count}')
-        
+
+        print(f'Total images;', image_count)
+
         cap.release()
         cv2.destroyAllWindows()
-                    
-    def detect_text(self, path):
-        """Detects text in the file."""
+    
+    def detect_text(self, img_path):
+        """
+        Detects text in the image file using google vision.
+
+        Args:
+            img_path: full path of the image to be analyzed
+        Returns:
+            Detected text in the image, None string otherwise.
+        """
         from google.cloud import vision
         from google.oauth2 import service_account
 
         credentials = service_account.Credentials.from_service_account_file(self.google_vision_json)
         client = vision.ImageAnnotatorClient(credentials=credentials)
 
-        with open(path, "rb") as image_file:
-            content = image_file.read()
+        with open(img_path, "rb") as img_file:
+            content = img_file.read()
+        
+        img = vision.Image(content=content)
 
-        image = vision.Image(content=content)
-
-        response = client.text_detection(image=image)
+        response = client.text_detection(image=img)
         texts = response.text_annotations
-        
+
         if len(texts) == 0:
-            print("text:None\n\n")
-            return 'None'
+            print("text: None")
+            return "None"
         else:
-            print(f"text:{texts[0].description}\n\n")
-    
+            print(f"text:", texts[0].description)
             return texts[0].description
-        
-    
+
     def compare_texts(self, text1, text2):
         """
-        2つのテキストの類似度を計算し、文字の誤変換や欠損を認識する関数
-        
+        Compares the similarity of 2 texts by calculating a similarity score
+        and a flag for detected errors.
         Args:
-            text1 (str): 比較対象の文章1
-            text2 (str): 比較対象の文章2
-            
+            text1: string with the first text
+            text2: string with the second text
         Returns:
-            float: 2つの文章の類似度 (0.0 ~ 1.0)
-            bool: 文字の誤変換や欠損が検出されたかどうかのフラグ
+            flag: bool value to determine if there was an error (True) or not (False)
         """
-        # Levenshtein 距離の計算
+        # Similarity through Levenshtein distance
         distance = self.levenshtein_distance(text1, text2)
-        
-        # 文章の長さ
+
         len1 = len(text1)
         len2 = len(text2)
-        
-        # 類似度の計算
+
         similarity = 1 - (distance / (len1 + len2))
-        
-        # 誤変換/欠損の検出
-        has_anomaly = False
-        if similarity < 0.9 or abs(len1 - len2) > 5:
-            has_anomaly = True
-            
-        print(f"\n=====================================\ntext1 : {text1}\ntext2 : {text2}\n類似度 : {similarity}\n=====================================\n")
-        self.word_list.append(f"\n=====================================\ntext1 : {text1}\ntext2 : {text2}\n類似度 : {similarity}\n=====================================\n")
+
+        # Error
         if similarity != 1:
             self.error_count += 1
         if similarity > 0.9:
@@ -111,12 +104,19 @@ class Video_Analysis:
         else:
             flag = True
         
+        print(f"\n=====================================\ntext1 : {text1}\ntext2 : {text2}\n類似度 : {similarity}\n=====================================\n")
+        self.word_list.append(f"\n=====================================\ntext1 : {text1}\ntext2 : {text2}\n類似度 : {similarity}\n=====================================\n")
+
         return flag
-    
+
     def levenshtein_distance(self, s1, s2):
         """
-        2つの文字列のLevenshtein距離を計算する関数
+        Calculate the Levenshtein distance between two texts
+        Args:
+            s1: string with the first text
+            s2: string with the second text
         """
+
         if len(s1) < len(s2):
             s1, s2 = s2, s1
         
@@ -128,86 +128,117 @@ class Video_Analysis:
                     distances_.append(distances[i1])
                 else:
                     distances_.append(1 + min((distances[i1], distances[i1 + 1], distances_[-1])))
-            distances = distances_
+            distances_ = distances_
         return distances[-1]
     
     def organize_images_with_ocrself(self, img_folder_path):
         """
-        ocrによって動作ごとに画像をフォルダ別け
-        入力：すべての画像が入ったフォルダ
-        動作：フォルダを新たに作成し、動作ごとに画像を別ける
-        出力：画像の入ったフォルダパス
+        Use OCR to detect the text in the subtitles and separate the frames into
+        folders, one for each action.
+        Args:
+            img_folder_path: the full path of the folder containing the extracted frames
         """
-        #画像ファイル名の取り出し
-        img_name_list = Fm.get_filename_from_folder(img_folder_path)
-        organized_folder = Fm.join_path_and_filename(Fm.get_parent_directory_path(img_folder_path), 'organized_folder')
-        Fm.Create_folder(organized_folder) 
-        #word_dic = {動作クラス：[文字テキスト, [画像名]]}
-        word_dic = {}
-        #クラス
+
+        try:
+            img_name_list = sorted(os.listdir(img_folder_path))
+        except:
+            img_name_list = None
+        
+        organized_folder = os.path.join()
+        os.makedirs(organized_folder, exist_ok=True)
+
+        word_dic = {} # keys are the action class, value is a list of [text, image name]
         move_class = 0
         pre_word = ''
-        
-        #同じクラスの画像リスト
-        img_class_list = []
-        
-        #画像ごとに言葉の抽出をOCRで行い
+
+        img_class_list = [] # list to store images that belong to the same action class
+
+        # Separate image according to OCR results
         for i, img_name_i in enumerate(img_name_list):
-            img_path = Fm.join_path_and_filename(img_folder_path, img_name_i)
+            img_path = os.path.join(img_folder_path, img_name_i)
             latest_word = self.detect_text(img_path)
             if i == 0:
-                input('start_organize\n\n')
-                organized_folder_i = Fm.join_path_and_filename(organized_folder, str(move_class))
-                Fm.Create_folder(organized_folder_i)
+                print("Start organize...")
+                organized_folder_i = os.path.join(organized_folder, str(move_class))
+                os.makedirs(organized_folder_i, exist_ok=True)
                 img_class_list.append(img_name_i)
                 pre_word = latest_word
-                
-            print(f"move_class:{move_class}, img_name_i:{img_name_i}\n\n")
+            
+            print(f"move_class:{move_class}, img_name_i:{img_name_i}")
             if self.compare_texts(pre_word, latest_word):
                 word_dic.update({move_class:[pre_word, img_class_list]}) 
                 img_class_list = []
                 move_class += 1
-                organized_folder_i = Fm.join_path_and_filename(organized_folder, str(move_class))
-                Fm.Create_folder(organized_folder_i)
-                print(f"Chang class | move_class:{move_class}, img_name_i:{img_name_i}\n\n")
+                organized_folder_i = os.path.join(organized_folder, str(move_class))
+                os.makedirs(organized_folder_i, exist_ok=True)
+                print(f"Change class | move_class:{move_class}, img_name_i:{img_name_i}\n\n")
             elif  i == len(img_name_list)-1:
                 word_dic.update({move_class:[pre_word, img_class_list]}) 
-                print(f"Chang class | move_class:{move_class}, img_name_i:{img_name_i}\n\n")
+                print(f"Change class | move_class:{move_class}, img_name_i:{img_name_i}\n\n")
                 break
-                
+
             img_class_list.append(img_name_i)
-            Fm.moveImageToFolder(img_path, organized_folder_i)
+            try:
+                if os.path.exists(img_path):
+                    fileName = os.path.basename(img_path)
+                    destinationFilePath = os.path.join(organized_folder_i, fileName)
+                    shutil.move(img_path, destinationFilePath)
+                    print(f"Image '{fileName}' has been moved to '{organized_folder_i}'.")
+                else:
+                    print(f"Error: '{img_path}' does not exist.")
+            except (shutil.Error, IOError) as e:
+                print(f"Error moving the image: {e}")
+
             pre_word = latest_word
         
         self.word_dic = word_dic
-        Fm.save_pickle_file(organized_folder, "word_dic.pickle", self.word_dic)
-        input(word_dic)
+        pickle_file_path = os.path.join(organized_folder, "word_dic.pickle")
+
+        with open(pickle_file_path, 'wb') as file:
+            pickle.dump(word_dic, file)
         
-        
-    def removeSparseImageDirs(self, all_image_folder, Trash_Folder_path):
-        file_name = Fm.get_filename_from_folder(all_image_folder)
+        print("Word dictionary:", word_dic)
+
+    def removeSparseImageDirs(self, all_img_folder, trash_folder):
+        """
+        Removes generated folders with few images to filter small actions
+        Args:
+            all_img_folder: one of the generated action class folders
+            trash_folder: full path of the trash folder
+        """
+
+        try:
+            file_name = sorted(os.listdir(all_img_folder))
+        except:
+            file_name = None
         file_name.remove("word_dic.pickle")
         for i, fm in enumerate(file_name):
-            # input(fm)
-            file_path = Fm.join_path_and_filename(all_image_folder, fm)
-            img_num = len(Fm.get_filename_from_folder(file_path))
+            file_path = os.path.join(all_img_folder, fm)
+            img_num = len(os.listdir(file_path))
             if img_num < 4:
-                # input(fm)
-                Fm.moveImageToFolder(file_path, Trash_Folder_path)
+                fileName = os.path.basename(file_path)
+                destinationFilePath = os.path.join(trash_folder, fileName)
+                shutil.move(file_path, destinationFilePath)
+                print(f"Image '{fileName}' has been moved to '{trash_folder}'.")
                 del self.word_dic[int(fm)]
-
+    
     def get_combined_img(self, folder_path, save_folder_path, combined_image_name):
-        # Ensure the save folder exists
-        os.makedirs(save_folder_path, exist_ok=True)
-    
-        # Get all image filenames from the folder
-        filenames = sorted(Fm.get_filename_from_folder(folder_path))
+        """
+        Generate a 9 image grid.
+        Args:
+            folder_path: full path with the images of a class action
+            save_folder_path: full path of where to save the grid
+            combined_image_name: name of the combined image
+        """
         
-        # Number of images needed
+        os.makedirs(save_folder_path, exist_ok=True)
+        filenames = sorted(os.listdir(folder_path))
+
+        # Parameters for single image grid
         num_images_needed = 9
-        padding = 10  # Space between images
-        image_size = 300  # Size to which each image will be resized
-    
+        padding = 10            # Space between images
+        image_size = 300        # Size to which each image will be resized
+
         # Select 9 images (first, last, and evenly spaced others)
         if len(filenames) >= num_images_needed:
             selected_filenames = [filenames[0]]
@@ -219,7 +250,7 @@ class Video_Analysis:
             selected_filenames = filenames
             while len(selected_filenames) < num_images_needed:
                 selected_filenames.append(None)  # Placeholder for empty slots
-    
+        
         # Create a new blank image for the 3x3 grid
         grid_size = (3 * image_size + 2 * padding, 3 * image_size + 2 * padding)
         combined_image = Image.new('RGB', grid_size, color=(255, 255, 255))
@@ -241,63 +272,63 @@ class Video_Analysis:
     
         print(f'Combined image saved to {save_path}')
 
-    
     def ImageCombiner(self, organize_folder_path, save_folder_path):
-        folder_name_list = Fm.get_filename_from_folder(organize_folder_path)
+        """
+        Call the get_combined_img function for all generated actions.
+        Args:
+            organize_folder_path: path of the organized folder by actions
+            save_folder_path: full path of where to save the combined images
+        """
+
+
+        folder_name_list = sorted(os.listdir(organize_folder_path))
         folder_name_list.remove('word_dic.pickle')
         folder_name_num_list = sorted([int(i) for i in folder_name_list])
         folder_name_list = [str(i) for i in folder_name_num_list]
         for i, folder_name in enumerate(folder_name_list):
-            folder_path = Fm.join_path_and_filename(organize_folder_path, folder_name)
+            folder_path = os.path.join(organize_folder_path, folder_name)
             combined_image_name = f'combined_image_{i}.jpg'
             self.get_combined_img(folder_path, save_folder_path, combined_image_name)
-        
-        
-         
-    
+
     def main(self):
-        # ###URLから動画を取得
-        # ###入力：URL
-        # ###出力：動画のパス
-        # movie_path = self.get_cooking_video()
-        movie_path = self.movie_path
-        google_json = self.google_vision_json
+        """
+        Main function to separate frames into actions according to the text from subtitles
+        Returns:
+            save_folder_path: full path of where the actions and word_dic.pickle are saved.
+        """
+
+        # Parameters
+        video_path = self.video_path
+        image_folder = os.path.join(self.current_path, f"images_{datetime.datetime.now()}")
+        all_image_folder = os.path.join(image_folder, "all_images")
+        os.makedirs(all_image_folder, exist_ok=True)
         
-        ###動画をフレームごとに分割し、画像をフォルダに保存
-        ###入力：動画のpathと出力先のpath
-        ###出力：保存先フォルダを保存
-        image_folder = Fm.join_path_and_filename(self.current_path, f"images\\images_{Fm.get_current_time()}")
-        all_image_folder = Fm.join_path_and_filename(image_folder, "all_images") 
-        Fm.Create_folder(all_image_folder)
-        self.movie2jpg(movie_path, all_image_folder)
-        
-        # # ###画像をGoogle cloud visionを用いて文字抽出
+        # Extract frames from video
+        self.video2jpg(video_path, all_image_folder)
+
+        # Use Google Cloud Vision to read the subtitles
         self.organize_images_with_ocrself(all_image_folder)
-        
-        ##枚数が少ないフォルダを削除
-        ##枚数が少ない物はゴミフォルダに移動
-        # image_folder = r"C:\Users\user\new_research\images\角煮"
-        # self.word_dic = Fm.load_pickle_file(r'C:\Users\user\new_research\images\角煮\organized_folder\word_dic.pickle')
-        input(self.word_dic)
-        Trash_Folder_path = Fm.join_path_and_filename(image_folder, 'Trash')
-        organize_folder_path = Fm.join_path_and_filename(image_folder, 'organized_folder')
-        Fm.Create_folder(Trash_Folder_path)
+
+        # Remove actions with very few images (<4)
+        Trash_Folder_path = os.path.join(image_folder, 'Trash')
+        organize_folder_path = os.path.join(image_folder, 'organized_folder')
+        os.makedirs(Trash_Folder_path, exist_ok=True)
         self.removeSparseImageDirs(organize_folder_path, Trash_Folder_path)
-        
-        ###ChatGPTに入力するための画像を作成
-        save_folder_path = Fm.join_path_and_filename(image_folder, 'GPT4o_input_img')
-        Fm.Create_folder(save_folder_path)
+
+        # Combine images
+        save_folder_path = os.path.join(image_folder, 'GPT4o_input_img')
+        os.makedirs(save_folder_path)
         self.ImageCombiner(organize_folder_path, save_folder_path)
-        Fm.save_pickle_file(save_folder_path, 'word_dic', self.word_dic)
+        pickle_file_path = os.path.join(save_folder_path, "word_dic.pickle")
+        with open(pickle_file_path, 'wb') as file:
+            pickle.dump(self.word_dic, file)
         
         return save_folder_path
-
-        
+    
 if __name__ == '__main__':
 
-    video_path = "path/to/video" # .mp4 format is preferred
+    video_path = "path/to/video"  # .mp4 format is preferred
     google_json_path = "path/to/google/credentials"
-
     VA = Video_Analysis(video_path, google_json_path)
     word_dic = VA.main()
     word_list = VA.word_list

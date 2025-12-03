@@ -10,9 +10,12 @@ import EnvObjectNode
 import GenerateFoon
 import FOONGenerator
 import TaskExecutionValidator
-import File_management as Fm
 import copy
 import networkx as nx
+import json
+import os
+import datetime
+import pickle
 
 class TaskPlanner:
     def __init__(self):
@@ -38,20 +41,29 @@ class TaskPlanner:
         for i, t in enumerate(G):
             error_state = f"{i}番目のタスク計画start"
             print(error_state)
-            turget = Fm.graph_to_json_str(t)
-            # input(turget)
-            self.task_plan, user_input = self.FOON.main(Fm.graph_to_json_str(Graph_enviroment_node), turget, save_file_path=fr'{save_folder}\prompt_{Fm.get_current_time()}')
+            target = json.dumps(nx.node_link_data(t), indent=4)
+            # input(target)
+            self.task_plan, user_input = self.FOON.main(json.dumps(nx.node_link_data(Graph_enviroment_node), indent=4), target, save_file_path=fr'{save_folder}\prompt_{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')}')
             while error_state != "No error":
                 self.prompt = self.FOON.gpt.prompt
                 self.TE = TaskExecutionValidator.TaskExecutionValidator(Graph_enviroment_node, user_input, FOON_graph)
-                Fm.save_pickle_file(save_folder, 'error_log_instancego.pickle', error_log)
+                os.makedirs(save_folder, exist_ok=True)
+                with open(os.path.join(save_folder, 'error_log_instancego.pickle'), 'wb') as file:
+                    pickle.dump(error_log, file)
+
+
                 error_state, action_num = self.TE.main(self.task_plan, action_num)
                 self.task_list = self.TE.task_list
                 print(error_state)
                 if error_state != "No error":
-                    self.task_plan = self.FOON.error(error_state, togle, save_file_path=fr'{save_folder}\prompt_{Fm.get_current_time()}')
+                    self.task_plan = self.FOON.error(error_state, togle, save_file_path=fr'{save_folder}\prompt_{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')}')
                     error_log.append([self.TE.Env_Grapf, self.TE.FOON, self.task_list, self.task_plan, self.TE.Functional_unit_list, error_state, self.prompt])
-                    Fm.save_pickle_file(save_folder, 'error_log.pickle', error_log)
+                    os.makedirs(save_folder, exist_ok=True)
+                    # Define the file path
+                    file_path = os.path.join(save_folder, 'error_log.pickle')
+                    # Save the mes object to the file
+                    with open(file_path, 'wb') as file:
+                        pickle.dump(error_log, file)
                     Graph_enviroment_node = copy.deepcopy(self.EO.enviroment_node)
                     FOON_graph = copy.deepcopy(self.FOON_graph)
                     togle = True
@@ -72,21 +84,29 @@ class TaskPlanner:
                     FOON_graph = copy.deepcopy(self.TE.FOON)
                     self.FOON_graph = copy.deepcopy(FOON_graph)
                     save_data.append([self.TE.FOON, self.TE.Env_Grapf, self.task_list, self.TE.Functional_unit_list])
-                    Fm.save_pickle_file(save_folder, 'result.pickle', save_data)
+
+                    os.makedirs(save_folder, exist_ok=True)
+                    # Define the file path
+                    file_path = os.path.join(save_folder, 'result.pickle')
+                    # Save the mes object to the file
+                    with open(file_path, 'wb') as file:
+                        pickle.dump(save_data, file)
                     togle = False
                     error_num = 0
-                Fm.save_pickle_file(save_folder, 'prompt_list.pickle', save_prompt)
-            
-                    
-        
-            
-        
+                
+                os.makedirs(save_folder, exist_ok=True)
+                # Define the file path
+                file_path = os.path.join(save_folder, 'prompt_list.pickle')
+                # Save the mes object to the file
+                with open(file_path, 'wb') as file:
+                    pickle.dump(save_prompt, file)
     
 if __name__ == '__main__':
-    G = Fm.load_pickle_file(Fm.join_path_and_filename(r'C:/Users/ryuka/research/new_research/images/牛丼_発表用2/Object_folder', 'G_list_R.pickle'))
+    with open(os.path.join('./images/Object_folder', 'G_list_R.pickle'), 'rb') as file:
+        G = pickle.load(file)
     TP = TaskPlanner()
-    Object_folder = r'C:/Users/ryuka/research/new_research/images/牛丼_発表用2/Object_folder'
-    save_folder = r'C:/Users/ryuka/research/new_research/images/牛丼_発表用2\FOON'
+    Object_folder = './images/Object_folder'
+    save_folder   = './images/FOON'
     first_two = TP.main(G, Object_folder, save_folder)
     task_plan = TP.task_plan
     prompt = TP.prompt
