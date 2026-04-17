@@ -56,7 +56,7 @@ class MainFunctionUnit_Generator():
                 self.gpt.text2prompt(prompt_path, save_file_path)
 
             if i < len(word_list):
-                ans = self.gpt.Target_Object_user_input(V_title, img_path, word_list, i, temp_file_path=r"C:/Users/ryuka/research/new_research/prompt/template\temp.txt" )
+                ans = self.gpt.Target_Object_user_input(self.V_title, img_path, word_list, i, temp_file_path="./prompt/template/temp.txt" )
             else:
                 continue
             ans = self.word2code(ans)
@@ -284,6 +284,7 @@ class MainFunctionUnit_Generator():
                 
             
     def main(self, input_folder, V_title):
+        self.V_title = V_title
         file_list = os.listdir(input_folder)
         img_list = [i for i in file_list if 'combined_image' in i]
         word_pickle = [i for i in file_list if 'word_dic' in i]
@@ -299,7 +300,6 @@ class MainFunctionUnit_Generator():
         self.estimateTargetState(img_list, prompt_path, save_file_path, word_list, Object_list_folder)
         
         ###ChatGPTから目標オブジェクトノードの作成 / Creation of target object nodes from ChatGPT
-        # self.Target_Object_list = Fm.load_pickle_file(Fm.join_path_and_filename(r'C:/Users/ryuka/research/new_research/images/牛丼_発表用2/Object_folder', 'Target_Object_list.pickle'))
         exec(f'self.Target_Object_list = {self.Target_Object_list}')
         self.Target_Object_node(self.Target_Object_list, Object_list_folder)
         

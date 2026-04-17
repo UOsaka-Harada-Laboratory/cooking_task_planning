@@ -34,9 +34,7 @@ class FOONGenerator():
         ###FOON作成
         if self.gpt.prompt == []:
             self.gpt.load_prompt_from_pickle(f'{Fewshot_folder_path}/taskplan_setup.pickle')
-        # self.gpt.prompt_role_system_add(Fm.load_txt_file(Fm.join_path_and_filename(Fewshot_folder_path, 'system.txt')))
         user_input = f'<Initial state of object node>\n{EG}\n</Initial state of object node>\n\n<Target state of object node>\n{graph}\n</Target state of object node>'
-        # self.gpt.prompt_role_user_add(user_input, r'C:/Users/ryuka/research/new_research/prompt\taskplanning2\スクリーンショット (16).png')
         self.gpt.prompt_role_user_add(user_input)
         ans = self.gpt.GPT4o_exe()
         self.gpt.prompt_role_assistant_add(ans)

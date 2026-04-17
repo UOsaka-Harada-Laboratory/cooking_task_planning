@@ -251,7 +251,7 @@ def render_and_save_graph(dot, sub_nodes, sub_edges, graph, highlight_node, high
     dot.render(filename, cleanup=True)
     print(f"Saved {filename}")
 
-def make_graph_image_three_action_nodes(graph, save_folder=r'C:/Users/ryuka/OneDrive/デスクトップ/阪大研究/修論/動画/graph', node_size_ratio=1.5, font_size_ratio=1.5):
+def make_graph_image_three_action_nodes(graph, save_folder='/path/to/graph', node_size_ratio=1.5, font_size_ratio=1.5):
     """
     指定された networkx の有向グラフから、アクションノード（"FO_XXX_A"）を3つ含む部分グラフを作成し、
     Graphviz を用いて画像を生成する。
@@ -295,7 +295,7 @@ def make_graph_image_three_action_nodes(graph, save_folder=r'C:/Users/ryuka/OneD
 
 if __name__=="__main__":  
     import File_management as Fm
-    result = Fm.load_pickle_file(r'C:/Users/ryuka/research/new_research/images/牛丼_発表用2/FOON/result.pickle')
+    result = Fm.load_pickle_file('/to/path/FOON/result.pickle')
     graph = result[-1][0]
     make_graph_image_three_action_nodes(graph)
     

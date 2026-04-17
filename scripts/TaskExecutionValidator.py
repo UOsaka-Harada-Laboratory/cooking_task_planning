@@ -14,7 +14,7 @@ import FunctionUnitBuilder as FUB
 
 
 class TaskExecutionValidator:
-    def __init__(self, G, user_input, FOON, reachability_file_path=r'C:/Users/ryuka/research/new_research/wrs_reachability'):
+    def __init__(self, G, user_input, FOON, reachability_file_path='/path/to/wrs_reachability'):
         # self.reachability = Fm.load_json_as_graph(reachability_file_path)
         self.Env_Grapf = G
         self.First_Env = G

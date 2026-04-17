@@ -299,11 +299,11 @@ class TreeGraph:
         
     
 if __name__ == '__main__':
-    EG = Fm.load_pickle_file(r'C:/Users/Shoichi/ryu/new_research\images\牛丼_資料作成用\motion_tree\EG.pickle')
-    ava_area = Fm.load_pickle_file(r'C:/Users/Shoichi/ryu/new_research\images\牛丼_資料作成用\motion_tree\ava_area.pickle')
-    resulet_pickle = Fm.load_pickle_file(r'C:/Users/Shoichi/ryu/new_research\images\牛丼_資料作成用/FOON\result.pickle')
+    EG = Fm.load_pickle_file('/path/to/motion_tree/EG.pickle')
+    ava_area = Fm.load_pickle_file('path/to/images/牛丼_資料作成用/motion_tree/ava_area.pickle')
+    resulet_pickle = Fm.load_pickle_file('path/to/images/牛丼_資料作成用/FOON/result.pickle')
     FOON = [result[0] for result in resulet_pickle]
-    save_folder = r'C:/Users/Shoichi/ryu/new_research\images\牛丼_資料作成用\object_placement'
+    save_folder = 'path/to/images/牛丼_資料作成用/object_placement'
     TG = TreeGraph()
     TG.main(FOON[0], EG, ava_area)
     

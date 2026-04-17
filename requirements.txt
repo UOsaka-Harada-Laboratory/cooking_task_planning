@@ -1,0 +1,15 @@
+# Core graph/planning
+networkx
+numpy
+matplotlib
+graphviz
+pygraphviz
+
+# LLM integration
+openai
+
+# Video / OCR pipeline
+opencv-python
+Pillow
+sentence-transformers
+google-cloud-vision
