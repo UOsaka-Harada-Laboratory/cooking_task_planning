@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Aug  7 17:52:25 2024
+Edited and reviewed on Apr 17 2026
 
 @author: user
 """
@@ -29,7 +30,8 @@ class EnvObjectNode:
         self.cup_node = []
     
     def node_dyeing(self, node):
-        ###１つのノードを入力し、分割する
+        ### １つのノードを入力し、分割する
+        ### Enter 1 node and divide it into ingredients, container, tool, and machine nodes based on the type of node
         if node['type'] == 'ingredients':
             if 'liquid' in node['physical_state']:
                 self.liquid_ingredients_node.append(node['label'])
@@ -45,13 +47,16 @@ class EnvObjectNode:
             self.machine_node.append(node['label'])
 
     def get_object_from_turget_G(self, G):
-        ###グラフリスト内のグラフを取り出す
+        ### グラフリスト内のグラフを取り出す
+        ### Extract graphs from the graph list
         for i, G_i in enumerate(G):
             for j, key in enumerate(G_i.nodes.keys()):
                 if 'A' not in key:
-        ###ノード別け
+                    ###ノード別け
+                    ### Divide nodes
                     self.node_dyeing(G_i.nodes[key])
-        ###リストの整理
+        ### リストの整理
+        ### Organize the list by removing duplicates and separating ingredients into liquid, powder, and others
         self.liquid_ingredients_node = list(set(self.liquid_ingredients_node))
         self.powder_ingredients_node = list(set(self.powder_ingredients_node))
         self.ingredients_node = list(set(self.ingredients_node))
@@ -59,12 +64,6 @@ class EnvObjectNode:
         self.container_node = list(set(self.container_node))
         self.tool_node = list(set(self.tool_node))
         self.machine_node = list(set(self.machine_node))
-        # input(self.ingredients_node)
-        # input(self.liquid_ingredients_node)
-        # input(self.powder_ingredients_node)
-        # input(self.container_node)
-        # input(self.tool_node)
-        # input(self.machine_node)
         
     def generate_Container_Name(self):
         for i, name in enumerate(self.ingredients_node):
@@ -77,9 +76,6 @@ class EnvObjectNode:
             cup_name = 'cup_' + str(i).zfill(3)
             self.cup_node.append(cup_name)
             
-        # input(self.tray_node)
-        # input(self.pinch_bowl_node)
-        # input(self.cup_node)
         
     def set_Attributes(self, Container, ID, Ingredients, Label, Machine, Place, equipment_status, cooking_method, cutting_style, physical_state, Type, temp, area, tool=["", ""]):
         self.enviroment_node.add_node(ID, **temp)
@@ -99,6 +95,7 @@ class EnvObjectNode:
         self.enviroment_node.nodes[ID]['node_state'] = 'latest'
         self.enviroment_node.nodes[ID]['area'] = area
         
+
     def get_available_area(self, path):
         points = []
         with open(path, 'r') as file:
@@ -124,10 +121,8 @@ class EnvObjectNode:
                 self.r_area.append(i)
             elif p[3] == 2:
                 self.l_area.append(i)
-        # input(f'b:{self.b_area}')
-        # input(f'r:{self.r_area}')
-        # input(f'l:{self.l_area}')
                 
+
     def get_random_value(self, list_i, num, seed=1):
         """
         リスト内からランダムで指定された数の値を取り出し、取り出した値をリストから消す関数。
@@ -139,19 +134,34 @@ class EnvObjectNode:
     
         Returns:
         list: 取り出された値のリスト
+        -----------------------------------------
+        A function that randomly takes out a specified number of values from a list and removes the taken values from the list.
+
+        Parameters:
+        list_i (list): Original list
+        num (int): Number of values to take out
+        seed (int, optional): Random seed value
+
+        Returns:
+        list: List of taken values
         """
+
         # シード値を設定
+        # Set the seed value
         if seed is not None:
             random.seed(seed)
         
         # 取り出す数がリストの長さを超えないようにする
+        # Ensure that the number of values to take out does not exceed the length of the list
         if num > len(list_i):
             raise ValueError("num is larger than the number of elements in the list")
         
         # ランダムに値を取り出す
+        # Randomly take out values
         selected_values = random.sample(list_i, num)
         
         # 取り出した値を元のリストから削除
+        # Remove the taken values from the original list
         for value in selected_values:
             list_i.remove(value)
         
@@ -168,11 +178,11 @@ class EnvObjectNode:
         
         self.get_available_area('./wrs_reachability/ave_point2.csv')
         
-        ###ingredientsノードをセット
-            ###液体の材料
+        ### ingredientsノードをセット / Set ingredient nodes
+            ### 液体の材料 / Liquid ingredients
         liq_area = self.get_random_value(self.l_area, len(self.liquid_ingredients_node))
         for name, cup, area in zip(self.liquid_ingredients_node, self.cup_node, liq_area):
-            ###設定
+            ### 設定 / Setting
             ID_I = 'EO_'+str(0).zfill(3)+'_' + 'F'+'_' +str(obj_num).zfill(3)
             obj_num += 1
             ID_C = 'EO_'+str(0).zfill(3)+'_' + 'C'+'_' +str(obj_num).zfill(3)
@@ -181,10 +191,10 @@ class EnvObjectNode:
             self.set_Attributes([cup, ID_C], ID_I, ['', ''], name, ['', ''], 'left_storage', '', '', '', 'liquid', 'ingredients', temp, area)
             self.set_Attributes(['', ''], ID_C, [[name, ID_I]], cup, ['', ''], 'left_storage', 'dirty', '', '', '', 'container', temp, area)
             
-            ###パウダーの材料
+            ### パウダーの材料 / Powder ingredients
         powder_area = self.get_random_value(self.l_area, len(self.powder_ingredients_node))
         for name, cup, area in zip(self.powder_ingredients_node, self.pinch_bowl_node, powder_area):
-            ###設定
+            ### 設定 / Setting
             ID_I = 'EO_'+str(0).zfill(3)+'_' + 'F'+'_' +str(obj_num).zfill(3)
             obj_num += 1
             ID_C = 'EO_'+str(0).zfill(3)+'_' + 'C'+'_' +str(obj_num).zfill(3)
@@ -192,10 +202,10 @@ class EnvObjectNode:
             self.set_Attributes([cup, ID_C], ID_I, ['', ''], name, ['', ''], 'left_storage', '', '', '', 'powder', 'ingredients', temp, area)
             self.set_Attributes(['', ''], ID_C, [[name, ID_I]], cup, ['', ''], 'left_storage', 'dirty', '', '', '', 'container', temp, area)
             
-            ###それ以外の材料
+        ### それ以外の材料 / For other ingredients
         other_area = self.get_random_value(self.l_area, len(self.ingredients_node))
         for name, cup, area in zip(self.ingredients_node, self.tray_node, other_area):
-            ###設定
+            ### 設定 / Setting
             ID_I = 'EO_'+str(0).zfill(3)+'_' + 'F'+'_' +str(obj_num).zfill(3)
             obj_num += 1
             ID_C = 'EO_'+str(0).zfill(3)+'_' + 'C'+'_' +str(obj_num).zfill(3)
@@ -203,16 +213,15 @@ class EnvObjectNode:
             self.set_Attributes([cup, ID_C], ID_I, ['', ''], name, ['', ''], 'left_storage', '', '', 'whole', 'solid', 'ingredients', temp, area)
             self.set_Attributes(['', ''], ID_C, [[name, ID_I]], cup, ['', ''], 'left_storage', 'dirty', '', '', '', 'container', temp, area)
     
-        ###containerノードをセット
-        ###一般的なものも追加
+        ### containerノードをセット / Set container nodes
+        ### 一般的なものも追加 / Add general containers as well
         general_container = ['cutting board', 'bowl0', 'bowl1', 'frying pan']
         for gc in general_container:
             if gc not in self.container_node:
                 self.container_node.append(gc)
         right_area = {'cutting board':[1, 2, 3, 5, 6, 7], 'bowl0':[10, 11, 15, 16], 'bowl1':[13, 14, 18, 19], 'frying pan':[12, 13, 17, 18]}
         for con in self.container_node:
-            ###設定
-            # input(con)
+            ### 設定 / Setting
             ID = 'EO_'+str(0).zfill(3)+'_' + 'C' +'_' +str(obj_num).zfill(3)
             if con in right_area.keys():
                 self.set_Attributes(['', ''], ID, [['', '']], con, ['', ''], 'right_storage', 'clean', '', '', '', 'container', temp, right_area[con])
@@ -221,7 +230,7 @@ class EnvObjectNode:
                 self.set_Attributes(['', ''], ID, [['', '']], con, ['', ''], 'right_storage', 'clean', '', '', '', 'container', temp, None)
             obj_num += 1
         
-        ###toolノードをセット
+        ### toolノードをセット / Set tool nodes
         tool_list = ['knife', 'spatula']
         for tl in tool_list:
             if tl not in self.tool_node:
@@ -230,46 +239,45 @@ class EnvObjectNode:
         if self.tool_node is not []:
             right_area = [[21, 22], [26, 27]]
             for tool, area in zip(self.tool_node, right_area):
-                ###設定
+                ### 設定 / Setting
                 ID = 'EO_'+str(0).zfill(3)+'_' + 'T'+'_'  +str(obj_num).zfill(3)
                 self.set_Attributes(['', ''], ID, [['', '']], tool, ['', ''], 'right_storage', 'clean', '', '', '', 'tool', temp, area)
                 # self.set_Attributes(None, ID, None, tool, None, 'right_storage', '', 'tool', temp, area)
                 obj_num += 1
         
-        ###マシンノードをセット
+        ###マシンノードをセット / Set machine nodes
         if self.machine_node is not []:
             for machine in self.machine_node:
-                ###設定
+                ### 設定 / Setting
                 ID = 'EO_'+str(0).zfill(3)+'_' + 'M'+'_' +str(obj_num).zfill(3)
                 self.set_Attributes(['', ''], ID, [['', '']], machine, ['', ''], 'workspace', 'off', '', '', '', 'machine', temp, [])
                 obj_num += 1
                 
-        ###ハンドノードをセット
+        ### ハンドノードをセット / Set hand nodes
         hand_list = ['right_hand', 'left_hand']
         for hand in hand_list:
-            ###設定
+            ### 設定 / Setting
             ID = 'EO_'+str(0).zfill(3)+'_' + 'H' +'_' +str(obj_num).zfill(3)
             self.set_Attributes(['', ''], ID, [['', '']], hand, ['', ''], '', 'empty', '', '', '', 'hand', temp, ['', ''])
             obj_num += 1
 
             
     def Graph_visualization(self, dot, file_name, save_folder):
-        # NetworkXグラフからGraphvizのグラフに変換
+        # NetworkXグラフからGraphvizのグラフに変換 / Convert NetworkX graph to Graphviz graph
         A = nx.nx_agraph.to_agraph(dot)
 
-
-        # ノードの属性を追加
+        # ノードの属性を追加 / Add node attributes
         for node in A.nodes():
             node_attr = A.get_node(node).attr
             attributes = dot.nodes[node]
 
-            # 属性のtypeが'motion'の場合の処理
+            # 属性のtypeが'motion'の場合の処理 / Processing when the attribute type is 'motion'
             if attributes.get('type') == 'motion':
                 node_attr['shape'] = 'ellipse'
             else:
-                node_attr['shape'] = 'rectangle'  # デフォルトの形状
+                node_attr['shape'] = 'rectangle'  # デフォルトの形状 / Default shape
 
-            # ラベルの設定
+            # ラベルの設定 / Set label
             label_str = "\n".join([f"{key}: {value}" for key, value in attributes.items() if key in ['Label', 'States', 'Place', 'Ingredients', 'Container']])
             node_attr['label'] = label_str
             node_attr['style'] = 'filled'
@@ -278,29 +286,29 @@ class EnvObjectNode:
             node_attr['fontsize'] = '14'
 
 
-        # エッジの属性を追加
+        # エッジの属性を追加 / Add edge attributes
         for u, v, data in dot.edges(data=True):
             if 'weight' in data:
                 A.get_edge(u, v).attr['label'] = f"Weight: {data['weight']}"
-                A.get_edge(u, v).attr['fontsize'] = '12'  # エッジラベルのフォントサイズ
+                A.get_edge(u, v).attr['fontsize'] = '12'  # エッジラベルのフォントサイズ / Font size for edge labels
 
-        # レイアウトを指定（例: dot、neato、fdpなど）
+        # レイアウトを指定（例: dot、neato、fdpなど）/ Specify layout (e.g., dot, neato, fdp, etc.)
         A.layout(prog='dot')
 
-        # グラフ画像をJPEG形式で保存
+        # グラフ画像をJPEG形式で保存 / Save the graph image in JPEG format
         A.draw(f"{save_folder}/{file_name}.jpg")
         
     def main(self, G, Object_folder):
-        ###環境オブジェクトノードから必要とする材料や調理器具の名前を取得
+        ### 環境オブジェクトノードから必要とする材料や調理器具の名前を取得 / Get the names of the necessary ingredients and cooking utensils from the environment object node
         self.get_object_from_turget_G(G)
         
-        ###食材に関してcontainerノードの名前を定義
+        ### 食材に関してcontainerノードの名前を定義 / Define the names of container nodes for ingredients
         self.generate_Container_Name()
         
-        ###オブジェクトの配置場所を定義
+        ### オブジェクトの配置場所を定義 / Define the placement of objects
         self.set_Object_Location()
         
-        ###環境オブジェクトノードを保存
+        ### 環境オブジェクトノードを保存 / Save the environment object node
         Enviroment_folder = os.path.join(Object_folder, '../Environmental_Object_Node')
     
         os.makedirs(Enviroment_folder, exist_ok=True)
@@ -309,7 +317,7 @@ class EnvObjectNode:
 
         graph_data = nx.node_link_data(self.enviroment_node)
     
-        # JSONファイルに書き込む
+        # JSONファイルに書き込む / Write to JSON file
         with open(file_path, 'w') as json_file:
             json.dump(graph_data, json_file, indent=4)
         

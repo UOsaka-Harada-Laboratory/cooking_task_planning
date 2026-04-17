@@ -63,14 +63,14 @@ class TaskExecutionValidator:
             
 if __name__ == "__main__":
     ###FOONジェネレータの出力はタスク計画のpath
-    task_plan_path = r"C:\Users\user\new_research\images\Few_shot_sample\FOON\2024_11_12_10_52_52_305705.txt"
+    task_plan_path = "/path/to/FOON/2024_11_12_10_52_52_305705.txt"
     task = Fm.load_txt_file(task_plan_path)
     input(task)
-    pickle = Fm.load_pickle_file(r'C:\Users\user\new_research\images\Few_shot_sample\FOON\result.pickle')
+    pickle = Fm.load_pickle_file('/path/to/FOON/result.pickle')
     action_num = [key for key in pickle[0].nodes.keys() if 'A' in key]
     foon = pickle[0]
     EG = pickle[1]
-    user_input = Fm.load_txt_file(r'C:\Users\user\new_research\prompt\taskplanning_without_Area/2024_11_12_10_52_52_306713.txt')
+    user_input = Fm.load_txt_file('/path/to/prompt/taskplanning_without_Area/2024_11_12_10_52_52_306713.txt')
     TEV = TaskExecutionValidator(G=EG, user_input=user_input, FOON=foon)
     error_state, i = TEV.main(task, len(action_num)+1)
     G = TEV.Env_Grapf

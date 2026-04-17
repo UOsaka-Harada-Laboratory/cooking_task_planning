@@ -7,15 +7,16 @@ from PIL import Image
 from sentence_transformers import SentenceTransformer
 
 class Video_Analysis:
-    def __init__(self, video_path, google_json):
+    def __init__(self, video_path, google_json, sentence_model='paraphrase-MiniLM-L6-v2'):
         """
         video_path: full path of the cooking video to analyze
         google_json: full path of json file for google credentials to use Vision API
+        sentence_model: name of the sentence transformer model to use for text similarity comparison
         """
         self.video_path = video_path
         self.current_path = os.path.dirname(os.path.abspath(__file__))
         self.google_vision_json = google_json
-        self.model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+        self.model = SentenceTransformer(sentence_model)
         self.word_list = []
         self.word_dic = {}
         self.error_count = 0
@@ -144,7 +145,7 @@ class Video_Analysis:
         except:
             img_name_list = None
         
-        organized_folder = os.path.join()
+        organized_folder = os.path.join(img_folder_path, 'organized_folder')
         os.makedirs(organized_folder, exist_ok=True)
 
         word_dic = {} # keys are the action class, value is a list of [text, image name]

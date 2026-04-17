@@ -51,25 +51,23 @@ class MainFunctionUnit_Generator():
             i = i + list_num
             print(f"\n-----------------{i+1}/{len(img_list)}-----------------\n")
             img_path = os.path.join(input_folder, img_name)
-            ###gptによる目標オブジェクト状態推定
+            ###gptによる目標オブジェクト状態推定 / Estimation of target object state by gpt
             if i == 0:
                 self.gpt.text2prompt(prompt_path, save_file_path)
-            # input(len(word_list))
-            # input(self.gpt.prompt)
+
             if i < len(word_list):
                 ans = self.gpt.Target_Object_user_input(V_title, img_path, word_list, i, temp_file_path=r"C:/Users/ryuka/research/new_research/prompt/template\temp.txt" )
             else:
                 continue
             ans = self.word2code(ans)
-            # input(f'ans:{ans}')
-            # input(f'ans : {ans}, thpe : {type(ans)}')
-            ###エラー検出
+
+            ###エラー検出 / Error detection
             flag, res = self.Object_Creation_Error_Detector(ans)
             if flag == False:
                 ans = res
                 input(f'エラーが出ました。')
                 input(ans)
-            ###文字のコード化処理
+            ###文字のコード化処理 / Code processing of characters
             self.Target_Object_list.append([img_name, ans])
             
             os.makedirs(save_folder_path, exist_ok=True)
@@ -84,21 +82,21 @@ class MainFunctionUnit_Generator():
             print(f"Data saved to {file_path}")
 
     def Graph_visualization(self, dot, file_name, ignore_empty=True):
-        # NetworkXグラフからGraphvizのグラフに変換
+        # NetworkXグラフからGraphvizのグラフに変換 / Convert NetworkX graph to Graphviz graph
         A = nx.nx_agraph.to_agraph(dot)
 
-        # ノードの属性を追加
+        # ノードの属性を追加 / Add node attributes
         for node in A.nodes():
             node_attr = A.get_node(node).attr
             attributes = dot.nodes[node]
 
-            # 属性のtypeが'motion'の場合の処理
+            # 属性のtypeが'motion'の場合の処理 / Processing when the attribute type is 'motion'
             if attributes.get('type') == 'motion':
                 node_attr['shape'] = 'ellipse'
             else:
-                node_attr['shape'] = 'rectangle'  # デフォルトの形状
+                node_attr['shape'] = 'rectangle'  # デフォルトの形状 / Default shape
 
-            # ラベルの設定
+            # ラベルの設定 / Set labels
             valid_labels = [
                 f"{key}: {value}" for key, value in attributes.items()
                 if key in ['label', 'ingredients', 'physical_state', 'cutting_style', 
@@ -113,16 +111,16 @@ class MainFunctionUnit_Generator():
             node_attr['fontcolor'] = 'black'
             node_attr['fontsize'] = '14'
 
-        # エッジの属性を追加
+        # エッジの属性を追加 / Add edge attributes
         for u, v, data in dot.edges(data=True):
             if 'weight' in data:
                 A.get_edge(u, v).attr['label'] = f"Weight: {data['weight']}"
                 A.get_edge(u, v).attr['fontsize'] = '12'  # エッジラベルのフォントサイズ
 
-        # レイアウトを指定（例: dot、neato、fdpなど）
+        # レイアウトを指定（例: dot、neato、fdpなど） / Specify layout (e.g., dot, neato, fdp, etc.)
         A.layout(prog='dot')
 
-        # グラフ画像をJPEG形式で保存
+        # グラフ画像をJPEG形式で保存 / Save graph image in JPEG format
         A.draw(f"{self.save_folder_path}/{file_name}.eps")
 
     def select_ids_by_object_type(self, obj):
@@ -296,18 +294,16 @@ class MainFunctionUnit_Generator():
         save_file_path = os.path.join(prompt_path, '../input_target_object.pickle')
         Object_list_folder = os.path.join(input_folder, '../Object_folder')
         os.makedirs(Object_list_folder, exist_ok=True)
-        # input(word_list)
-        # input(f'img_list:{len(img_list)}, word_list:{len(word_list)}')
 
-        ###ChatGPTから目標オブジェクト状態の推定
+        ###ChatGPTから目標オブジェクト状態の推定 / Estimation of target object state from ChatGPT
         self.estimateTargetState(img_list, prompt_path, save_file_path, word_list, Object_list_folder)
         
-        ###ChatGPTから目標オブジェクトノードの作成
+        ###ChatGPTから目標オブジェクトノードの作成 / Creation of target object nodes from ChatGPT
         # self.Target_Object_list = Fm.load_pickle_file(Fm.join_path_and_filename(r'C:/Users/ryuka/research/new_research/images/牛丼_発表用2/Object_folder', 'Target_Object_list.pickle'))
         exec(f'self.Target_Object_list = {self.Target_Object_list}')
         self.Target_Object_node(self.Target_Object_list, Object_list_folder)
         
-        # オブジェクトノードの並べ替え
+        # オブジェクトノードの並べ替え / Sorting object nodes
         self.G_list = self.sort_graph(self.G_list)
 
         os.makedirs(Object_list_folder, exist_ok=True)
@@ -338,7 +334,7 @@ class MainFunctionUnit_Generator():
 if __name__ == '__main__':
     MG = MainFunctionUnit_Generator()
     input_folder = './images/GPT4o_input_img'
-    V_title = 'ポン酢牛丼'
+    V_title = 'Pondzu_Beef_Bowl' # 'ポン酢牛丼'
     MG.main(input_folder, V_title)
     Target_Object_list = MG.Target_Object_list
     G_list = MG.G_list
