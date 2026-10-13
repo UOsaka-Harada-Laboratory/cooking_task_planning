@@ -1,0 +1,46 @@
+[{
+"comment":"""1. comparing the overall subtitle with the past subtitle, we can expect that the chicken is currently in the process of being seasoned.
+2. subtitle says “chicken and alcohol” and we can expect to see alcohol in the chicken.
+3. from the image, we can expect to put the alcohol and chicken in the bowl.
+4. Since the object node of the past prompt is the first one, there is no dependency relationship.
+5. as a general comment, it can be determined that the bowl is filled with Chopped meat and alcohol.""",
+"motion":'pour',				
+"object":[				
+{
+ "label": "chicken",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state" : "solid",
+ "cutting_style" : "chope",
+ "cooking_method" : "raw",
+ "container": ["bowl"],
+ "place": "workspace",
+ "machine": [],
+ "equipment_status":""
+},
+{
+ "label": "sake",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "liquid",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ }, 
+{
+ "label": "bowl",			
+ "type": "container", 
+ "ingredients": ["chicken", "sake" ,"salt and pepper", "grated garlic", "grated ginger"],
+ "physical_state": "",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": [],
+ "place": "workspace",
+ "machine": [],
+ "equipment_status":"dirty"
+ }
+]
+}]

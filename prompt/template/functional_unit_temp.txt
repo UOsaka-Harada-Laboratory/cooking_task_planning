@@ -1,0 +1,55 @@
+入力ノードは2つ、出力ノードが２つの機能ユニットです
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "ID": 入力ノード１(IDは代入してください),
+            "Label": 代入してください,
+            "Type": 代入してください(こちらは対象物),
+            "States": 代入してください,
+            "Ingredients": 代入してください,
+            "Container": 代入してください,
+            "Place": 代入してください,
+            "Machine": 代入してください,
+            "id": 代入してください
+        },
+        {
+            "ID": 代入してください,
+            "Label": 代入してください,
+            "Type": hand,
+            "States": 代入してください,
+            "Ingredients": 代入してください,
+            "Container": 代入してください,
+            "Place": 代入してください,
+            "Machine": 代入してください,
+            "id": 代入してください
+        },
+        {
+            "ID": "O_003_002",
+            "Label": "bowl",
+            "Type": "container",
+            "States": "filled",
+            "Ingredients": "chicken, sake",
+            "Container": "None",
+            "Place": "workspace",
+            "Machine": "None",
+            "id": "O_003_002"
+        }
+    ],
+    "links": [
+        {
+            "source": "O_003_M",
+            "target": "O_003_000"
+        },
+        {
+            "source": "O_003_M",
+            "target": "O_003_001"
+        },
+        {
+            "source": "O_003_M",
+            "target": "O_003_002"
+        }
+    ]
+}

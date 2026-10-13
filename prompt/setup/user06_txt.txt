@@ -1,0 +1,10 @@
+Allowed actions: [cut, pour, mix, pick, place, cook]
+Allowed physical_state: [powder, solid, liquid].
+Allowed cutting_style: [chop, slice, julienne, whole]
+Allowed cooking_method: [raw, cooked]
+Allowed container state: [clean, dirty]
+Allowed tool state: [clean, dirty]
+Allowed machine state: [on, off]
+Video title: y2mate.com - これうますぎて作ったら永遠バクバク食べちゃうので注意が必要です鶏唐揚げの甘酢がらめ詳しいレシピはアプリで料理名を検索鶏肉  鶏もも肉  おかず_v720P
+All caption for the video: ['揚げ焼きで簡単', '激うま鶏肉おかず', 'ごしょうかーい', '鶏肉にお酒', '鶏肉にお酒塩こしょう', '鶏肉にお酒塩こしょうおろしにんにく', '鶏肉にお酒塩こしょうおろしにんにくおろししょうが', 'よーくもみもみ', 'かたくり粉と薄力粉を入れて', 'かたくり粉と薄力粉を入れて', 'まぶすように混ぜる', 'これくらいしっかりまぶしてなー', 'サラダ油を熱したフライパンで', 'サラダ油を熱したフライパンで', '全体がこんがりきつね色になるまで', '揚げ焼きにしていくでぇ', '揚げあげりはこんな感じ!', '砂糖酢醤油白いりごま', 'さっきのからあげを投入', '全体にしっかりタレを絡めたら', 'ちょっと小さめに切ってあるから', 'ばくばく食べれちゃうねん', 'ほんまにおいしいから周りにも教えてくあげて']
+Video subtitles: 鶏肉にお酒塩こしょうおろしにんにくおろししょうが

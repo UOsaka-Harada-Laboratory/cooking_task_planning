@@ -1,0 +1,6 @@
+<Wrong task>
+{'action': 'Pic', 'object': 'chicken', 'space': 'cutting board', 'hand': 'left_hand'}
+</Wrong task>
+<The reason>
+Pic motion on food is limited to solid and uncut food. Grasp the Container and perform the Pour motion.
+</The reason>

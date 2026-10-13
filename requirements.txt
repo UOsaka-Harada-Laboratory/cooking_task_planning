@@ -1,15 +1,27 @@
+# Python >= 3.10
+# System packages (Ubuntu): sudo apt install graphviz libgraphviz-dev
+
 # Core graph/planning
 networkx
-numpy
+numpy>=1.20
+scipy
 matplotlib
 graphviz
 pygraphviz
 
-# LLM integration
-openai
+# LLM integration (API key read from the OPENAI_API_KEY environment variable)
+openai>=1.0
 
 # Video / OCR pipeline
 opencv-python
 Pillow
 sentence-transformers
 google-cloud-vision
+google-auth
+
+# Motion planning (motion_planning/) uses the bundled wrs/ folder, which needs:
+panda3d
+scikit-learn
+open3d
+shapely
+python-dateutil

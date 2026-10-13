@@ -1,0 +1,832 @@
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "container": [
+                "cup_000",
+                "EO_000_C_001"
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_F_000",
+            "ingredients": [
+                "",
+                ""
+            ],
+            "label": "olive oil",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "liquid",
+            "place": "left_storage",
+            "type": "ingredients",
+            "equipment_status": "",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 77
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_001",
+            "ingredients": [
+                [
+                    "olive oil",
+                    "EO_000_F_000"
+                ]
+            ],
+            "label": "cup_000",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 77
+        },
+        {
+            "container": [
+                "cup_001",
+                "EO_000_C_003"
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_F_002",
+            "ingredients": [
+                "",
+                ""
+            ],
+            "label": "chopped tomatoes",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "liquid",
+            "place": "left_storage",
+            "type": "ingredients",
+            "equipment_status": "",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 105
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_003",
+            "ingredients": [
+                [
+                    "chopped tomatoes",
+                    "EO_000_F_002"
+                ]
+            ],
+            "label": "cup_001",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 105
+        },
+        {
+            "container": [
+                "cup_002",
+                "EO_000_C_005"
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_F_004",
+            "ingredients": [
+                "",
+                ""
+            ],
+            "label": "water",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "liquid",
+            "place": "left_storage",
+            "type": "ingredients",
+            "equipment_status": "",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 123
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_005",
+            "ingredients": [
+                [
+                    "water",
+                    "EO_000_F_004"
+                ]
+            ],
+            "label": "cup_002",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 123
+        },
+        {
+            "container": [
+                "pinch_bowl_000",
+                "EO_000_C_007"
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_F_006",
+            "ingredients": [
+                "",
+                ""
+            ],
+            "label": "grated garlic",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "powder",
+            "place": "left_storage",
+            "type": "ingredients",
+            "equipment_status": "",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 78
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_007",
+            "ingredients": [
+                [
+                    "grated garlic",
+                    "EO_000_F_006"
+                ]
+            ],
+            "label": "pinch_bowl_000",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 78
+        },
+        {
+            "container": [
+                "pinch_bowl_001",
+                "EO_000_C_009"
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_F_008",
+            "ingredients": [
+                "",
+                ""
+            ],
+            "label": "seasonings",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "powder",
+            "place": "left_storage",
+            "type": "ingredients",
+            "equipment_status": "",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 107
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_009",
+            "ingredients": [
+                [
+                    "seasonings",
+                    "EO_000_F_008"
+                ]
+            ],
+            "label": "pinch_bowl_001",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 107
+        },
+        {
+            "container": [
+                "tray_000",
+                "EO_000_C_011"
+            ],
+            "cooking_method": "",
+            "cutting_style": "whole",
+            "id": "EO_000_F_010",
+            "ingredients": [
+                "",
+                ""
+            ],
+            "label": "daikon",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "solid",
+            "place": "left_storage",
+            "type": "ingredients",
+            "equipment_status": "",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 79
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_011",
+            "ingredients": [
+                [
+                    "daikon",
+                    "EO_000_F_010"
+                ]
+            ],
+            "label": "tray_000",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 79
+        },
+        {
+            "container": [
+                "tray_001",
+                "EO_000_C_013"
+            ],
+            "cooking_method": "",
+            "cutting_style": "whole",
+            "id": "EO_000_F_012",
+            "ingredients": [
+                "",
+                ""
+            ],
+            "label": "shimeji",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "solid",
+            "place": "left_storage",
+            "type": "ingredients",
+            "equipment_status": "",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 109
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_013",
+            "ingredients": [
+                [
+                    "shimeji",
+                    "EO_000_F_012"
+                ]
+            ],
+            "label": "tray_001",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 109
+        },
+        {
+            "container": [
+                "tray_002",
+                "EO_000_C_015"
+            ],
+            "cooking_method": "",
+            "cutting_style": "whole",
+            "id": "EO_000_F_014",
+            "ingredients": [
+                "",
+                ""
+            ],
+            "label": "chicken",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "solid",
+            "place": "left_storage",
+            "type": "ingredients",
+            "equipment_status": "",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 128
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_015",
+            "ingredients": [
+                [
+                    "chicken",
+                    "EO_000_F_014"
+                ]
+            ],
+            "label": "tray_002",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": 128
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_016",
+            "ingredients": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "label": "pan",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "right_storage",
+            "type": "container",
+            "equipment_status": "clean",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": null
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_017",
+            "ingredients": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "label": "cutting board",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "right_storage",
+            "type": "container",
+            "equipment_status": "clean",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": [
+                1,
+                2,
+                3,
+                5,
+                6,
+                7
+            ]
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_018",
+            "ingredients": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "label": "bowl0",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "right_storage",
+            "type": "container",
+            "equipment_status": "clean",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": [
+                10,
+                11,
+                15,
+                16
+            ]
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_019",
+            "ingredients": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "label": "bowl1",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "right_storage",
+            "type": "container",
+            "equipment_status": "clean",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": [
+                13,
+                14,
+                18,
+                19
+            ]
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_020",
+            "ingredients": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "label": "frying pan",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "right_storage",
+            "type": "container",
+            "equipment_status": "clean",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": [
+                12,
+                13,
+                17,
+                18
+            ]
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_T_021",
+            "ingredients": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "label": "knife",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "right_storage",
+            "type": "tool",
+            "equipment_status": "clean",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": [
+                21,
+                22
+            ]
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_T_022",
+            "ingredients": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "label": "spatula",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "right_storage",
+            "type": "tool",
+            "equipment_status": "clean",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": [
+                26,
+                27
+            ]
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_M_023",
+            "ingredients": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "label": "stove",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "workspace",
+            "type": "machine",
+            "equipment_status": "off",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": []
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_H_024",
+            "ingredients": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "label": "right_hand",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "",
+            "type": "hand",
+            "equipment_status": "empty",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": [
+                "",
+                ""
+            ]
+        },
+        {
+            "container": [
+                "",
+                ""
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_H_025",
+            "ingredients": [
+                [
+                    "",
+                    ""
+                ]
+            ],
+            "label": "left_hand",
+            "machine": [
+                "",
+                ""
+            ],
+            "physical_state": "",
+            "place": "",
+            "type": "hand",
+            "equipment_status": "empty",
+            "tool": [
+                "",
+                ""
+            ],
+            "step": 0,
+            "node_state": "latest",
+            "area": [
+                "",
+                ""
+            ]
+        }
+    ],
+    "links": []
+}

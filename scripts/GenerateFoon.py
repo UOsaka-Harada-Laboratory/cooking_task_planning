@@ -17,7 +17,7 @@ class GenerateFoon():
         
         
 if __name__ == '__main__':
-    EG = Fm.load_json_file(f'/path/to/Environmental_Object_Node/EO000.json')
+    EG = Fm.load_json_as_txt(f'/path/to/Environmental_Object_Node/EO000.json')
     GF = GenerateFoon()
     gpt = GPT.GPT_manipulation()
     A = Fm.load_pickle_file('/path/to/Object_folder/G_list.pickle')

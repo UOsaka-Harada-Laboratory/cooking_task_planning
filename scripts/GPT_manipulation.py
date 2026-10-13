@@ -13,8 +13,11 @@ import time
 
 class GPT_manipulation:
     
-    def __init__(self, api_key):
+    def __init__(self, api_key=None):
         self.prompt = []
+        api_key = api_key or os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError("OpenAI API key not found. Set the OPENAI_API_KEY environment variable.")
         # Azure OpenAIの設定
         self.client = OpenAI(api_key=api_key)
         self.gpt4_client = openai
@@ -107,8 +110,13 @@ class GPT_manipulation:
                 with open(os.path.join(folder_path, user_txt_file[i]), 'r', encoding='utf-8') as file:
                     text = file.read()
                 with open(os.path.join(folder_path, user_jpg_file[i]), 'r', encoding='utf-8') as file:
-                    img = file.read()
-                self.prompt_role_user_add(text, img)
+                    img = file.read().strip()
+                # 画像パスはプロンプトフォルダからの相対パス / image paths are relative to the prompt folder
+                img_path = os.path.join(folder_path, img)
+                if not os.path.isfile(img_path):
+                    raise FileNotFoundError(f'Few-shot image {img_path} not found (referenced by {user_jpg_file[i]}). '
+                                            'The video frames used as few-shot examples are not distributed; see README.')
+                self.prompt_role_user_add(text, img_path)
                 with open(os.path.join(folder_path, assistant_file[i]), 'r', encoding='utf-8') as file:
                     text = file.read()
                 self.prompt_role_assistant_add(text)
@@ -123,7 +131,7 @@ class GPT_manipulation:
         self.save_prompt_to_pickle(save_file_path)
 
         
-    def Target_Object_user_input(self, V_title, img_path, word_list, num, temp_file_path="./prompt/template/temp.txt"):
+    def Target_Object_user_input(self, V_title, img_path, word_list, num, temp_file_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "prompt", "template", "temp.txt")):
         with open(temp_file_path, 'r', encoding='utf-8') as file:
                     text = file.read()
         text += V_title + '\nAll caption for the video: ' + str(word_list) + '\nVideo subtitles: ' + word_list[int(num)]
@@ -134,5 +142,4 @@ class GPT_manipulation:
         return result
         
 if __name__=="__main__": 
-    api_key = "API_KEY_HERE_OR_LOAD" 
-    gpt = GPT_manipulation(api_key=api_key)
+    gpt = GPT_manipulation()

@@ -1,0 +1,229 @@
+<Background>
+You are a FOON expert.
+</Background>
+
+<Task>
+Your role is to correct the task plan for the cooking robot.
+I input the object node that represents the current environment state and the target object node into the LLM, and when I asked it to plan the task, I discovered an error.
+I would like you to identify the cause of the error and replan the task.
+Also, in the correction results, omit everything except the corrections, and instead of outputting only the corrections, output all tasks required for the goal state.
+</Task>
+
+<Constraints> 
+1. Handle left_Storage objects with your left hand. 
+2. Handle right_Storage objects with your right hand. 
+3. For Cut and Mix actions, select the arm holding the tool you want to use for the action as the hand. 
+4. If you have any questions, please circle them with <Question></Question>. 
+5. For ingredients that cannot be moved in one action (items that have been cut into pieces, liquid, or powder), please use the Pour action. 
+6. The criterion for selecting an area is that main cooking actions should be performed in the workspace as much as possible, and non-main actions such as temporary placement should be performed in a separate location.   
+7. The Cook action can be performed by simply turning on the cooking machine, so there is no need to give instructions such as Tour on.
+8. When performing a Cook action, place the cooking container on the machine and perform it.
+9. The workspace is not very large, so please move unnecessary items to storage each time.
+</Constraints>
+
+<Input format>
+1. Tasks that are verified and determined to be incorrect
+2. The reason it was determined to be infeasible
+3. Input object nodes that represent the object state of the environment in the previous environment before the task is determined to be incorrect in json format
+4. Functional units that represent the conditions for executing a task (input nodes represent the environmental states required to execute a task)
+</Input format>
+
+<Output format>
+・Please output the cause of the inability to execute, the proposed fix, and the corrected task in xml format, like <output> of <Example>.
+・Be sure to enclose the modified task in <Task></Task>(Also, in the correction results, omit everything except the corrections, and instead of outputting only the corrections, output all tasks required for the goal state.)
+・If there have been any past failures, create a history of the past failure causes and output it enclosed in <failure history></failure history>
+</Output format>
+
+<Possible actions of the robot>Pic, Place, Mix, Cook, Pour, Cut</Possible actions of the robot>
+
+<How to write operations>
+n. Pic | object | Place to Pic (if the object is food, the container name. If the object is placed on a machine, the machine name) | hand to use
+n. Place | object | place to place (if the object is food, the container name. If the object is placed on a machine, the machine name) | hand to use
+n. Mix | object (list format) | utensil to be used | Container with food | hand to be used
+n. Cook | object (list format) | container | heat level(high, medium, low) | machine | hand to be used
+n. Pour | object| container containing objects | container to pour into | hand to use
+n. Cut | object | how to cut | hand to use
+</How to write operations>
+
+<Example>
+<input>
+<Wrong task>
+4. Place | chicken | cutting board | left_hand
+</Wrong task>
+<The reason>
+node：～, attribute：～, Environment Object Attributes：～, The object state attributes required to perform the task：～
+</The reason>
+<Environment Object Node>
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "container": [
+                [
+                    "cup_000",
+                    "EO_000_C_001"
+                ]
+            ],	#The name of the container in which the food is placed
+            "cooking_method": "", #Cooking state of ingredients (only defined for individual ingredients)
+            "cutting_style": "", #How to cut ingredients (only individual ingredients are defined)
+            "id": "EO_000_F_000", #Node ID
+            "ingredients": [], #If the object is a container, the ingredients inside
+            "label": "sake",  #Name of the object
+            "machine": [], #Machines to be used (stove, etc.)
+            "physical_state": "liquid", #If the object is an ingredient, the physical state of the ingredient (liquid, solid, powder)
+            "place": "left_storage", #Location of object (left_storage, right_storage, workspace)
+            "type": "ingredients", #Type of object (ingredient, container, machine, tool)
+            "equipment_status": "",　#オブジェクトが食材以外だった時のオブジェクトの状態
+            "step": 0,
+            "node_state": "latest",
+            "area": 87 #オブジェクトが配置されている場所
+        },
+        {
+            "container": [],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_001",
+            "ingredients": [
+                [
+                    "sake",
+                    "EO_000_F_000"
+                ]
+            ],
+            "label": "cup_000",
+            "machine": [],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "step": 0,
+            "node_state": "latest",
+            "area": 87
+        },
+        {
+            "container": [
+                [
+                    "cup_001",
+                    "EO_000_C_003"
+                ]
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_F_002",
+            "ingredients": [],
+            "label": "vinegar",
+            "machine": [],
+            "physical_state": "liquid",
+            "place": "left_storage",
+            "type": "ingredients",
+            "equipment_status": "",
+            "step": 0,
+            "node_state": "latest",
+            "area": 115
+        },
+        {
+            "container": [],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_003",
+            "ingredients": [
+                [
+                    "vinegar",
+                    "EO_000_F_002"
+                ]
+            ],
+            "label": "cup_001",
+            "machine": [],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "step": 0,
+            "node_state": "latest",
+            "area": 115
+        }, ...]
+}
+</Environment Object Node>
+<Functional_unit>
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "label": "Pic",
+            "object": "bowl",
+            "comment": "None",
+            "id": "FU_055_A"
+        },
+        {
+            "label": "right_hand",
+            "equipment_status": "empty",
+            "id": "FU_055_H_in_000"
+        },
+        {
+            "label": "bowl",
+            "place": "right_storage",
+            "id": "FU_055_C_in_001"
+        },
+        {
+            "label": "right_hand",
+            "equipment_status": "fill",
+            "container": [
+                "bowl",
+                "EO_000_C_024"
+            ],
+            "id": "FU_055_H_out_000"
+        },
+        {
+            "label": "bowl",
+            "place": "right_hand",
+            "id": "FU_055_C_out_001"
+        }
+    ],
+    "links": [
+        {
+            "source": "FU_055_A",
+            "target": "FU_055_H_out_000"
+        },
+        {
+            "source": "FU_055_A",
+            "target": "FU_055_C_out_001"
+        },
+        {
+            "source": "FU_055_H_in_000",
+            "target": "FU_055_A"
+        },
+        {
+            "source": "FU_055_C_in_001",
+            "target": "FU_055_A"
+        }
+    ]
+}
+</Functional_unit>
+</input>
+
+<output>
+<failure history>
+If there have been any past failures, create a history of the past failure causes and output it enclosed in <failure history></failure history>
+</failure history>
+
+<Infeasible Cause>
+Please consider the reasons why it is not possible and write them down in bullet points.
+</Infeasible Cause>
+<Fixes>
+Write down what went right the last time you did it.
+Using that as a reference, list in bullet points what needs to be corrected in the last task.
+</Fixes>
+<Task>
+1. Pic | cutting board | right_Storage | right_hand
+2. Place | cutting board | workspace | right_hand
+3. Pic | chicken | tray000 | left_hand
+4．Place | chicken | cutting board | left_hand
+：
+：
+：
+</Task>
+</output>
+</Example>

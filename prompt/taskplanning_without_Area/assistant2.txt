@@ -1,0 +1,19 @@
+<Required main actions>
+1. Mix all ingredients in the bowl.
+</Required main actions>
+
+<Required sub actions>
+1. Use a spatula to mix the ingredients in the bowl.
+</Required sub actions>
+
+<Task>
+1. Pic | spatula | right_storage | right_hand
+2. Mix | [chicken, sake, salt and pepper, grated garlic, grated ginger, potato starch, flour] | spatula | bowl | right_hand
+3. Place | spatula | right_storage | right_hand
+</Task>
+
+<Reason for selecting the action>
+1. Pick up the spatula to mix the ingredients in the bowl.
+2. Mix the ingredients in the bowl to achieve the target state.
+3. Return the spatula to its original position.
+</Reason for selecting the action>

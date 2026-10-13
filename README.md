@@ -11,12 +11,18 @@ This repository contains the official implementation of the "Cooking Task Planni
 ## 📋 TODO 
 
 - [X] Initial code upload. 
-- [X] Adding instructions for execution. (Except Motion Planning)
-- [ ] Adding instructions for motion planning
-- [ ] Adding requirements.txt / conda environment instructions
+- [X] Adding instructions for execution.
+- [X] Adding instructions for motion planning
+- [X] Adding requirements.txt
+- [X] Offline tests with recorded runs
 - [ ] Docker environment?
 
 ## Installation
+Requires Python 3.10 or newer.
+```
+sudo apt install graphviz libgraphviz-dev   # needed by pygraphviz
+pip install -r requirements.txt
+```
 
 ## Video Analysis
 
@@ -33,8 +39,10 @@ python scripts/Video_Analysis_gvision.py
 2. Estimate the target object node using ChatGPT.
 Notes:  -make sure the "input_folder" path is the same as the "save_path_folder" from "Video_Analysis_gvision.py"
         -specify the video title (Vtitle)
-        -set the OpenAI API key in the __init__ function of GPT_manipulation class in "GPT_manipulation.py"
+        -set the OpenAI API key as an environment variable
+        -the few-shot examples in `prompt/setup/` refer to video frames (`image00.jpg`, `image03.jpg`, ...) that are not distributed with this repository; place your own frames there under those names (each `userXX_jpg.txt` names its image)
 ```
+export OPENAI_API_KEY="your-api-key"
 python scripts/MainFunctionUnit_Generator.py
 ```
 3. Create an environment object node.
@@ -47,12 +55,28 @@ Note: make sure the paths for "G_list.pickle" is correct.
 ```
 python scripts/TaskPlanner.py
 ```
-5. Use the motion_planning/Motion_planner.py (Incomplete)
-Note: Motion planner uses the WRS system.
+5. Plan the robot motions with motion_planning/Motion_planner.py
+Note: Motion planner uses the bundled WRS system (`wrs/`), which must be on the Python path, and opens a Panda3D window. The object models are in `stl/`.
 ```
-python motion_planning/Motion_planner.py
+export PYTHONPATH=$PWD/scripts:$PWD/motion_planning:$PWD/wrs:$PWD
+python motion_planning/Motion_planner.py --result ./images/FOON/result.pickle --env ./images/Environmental_Object_Node/EO000.json --save-folder ./images/motion_planning
 ```
+Each run plans the next step of the task plan and then plays the motions planned so far in the window. Close the window to end the run, then continue with the next step:
+```
+python motion_planning/Motion_planner.py --result ./images/FOON/result.pickle --env ./images/Environmental_Object_Node/EO000.json --save-folder ./images/motion_planning --reuse-placement --tree-file ./images/motion_planning/FOON0.pickle
+```
+The first run computes collision-free initial object placements and saves them in `--save-folder`; `--reuse-placement` reuses them. The plan tree (`FOON0.pickle`) is saved after every planned step, and `--tree-file` continues after the last one.
 
+
+## Testing
+The offline tests replay recorded runs from `tests/fixtures/` (saved target object nodes, environment node and LLM answers), so they need neither an OpenAI API key nor Google Vision credentials.
+```
+python -m unittest discover -s tests -v
+```
+They check that the environment object node is rebuilt from the target object nodes, that task planning reproduces the recorded FOONs, and that an invalid plan triggers error recovery.
+
+## Third-party code
+`wrs/` is a subset of the [WRS](https://github.com/wanweiwei07/wrs) robot planning system, distributed under the MIT License (see `wrs/LICENSE`); `scripts/robot_math.py` is copied from it. WRS bundles a modified copy of [trimesh](https://github.com/mikedh/trimesh) (MIT License) in `wrs/basis/trimesh/`.
 
 ## Citation
 If you find our work helpful, please consider citing:

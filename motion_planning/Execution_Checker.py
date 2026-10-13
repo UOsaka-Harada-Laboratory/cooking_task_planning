@@ -18,9 +18,33 @@ import numpy as np
 import math
 
 class ExecutionChecker():
+    reuse_robot = True  # False: 候補ごとにロボットモデルを作り直す（元の動作）/ rebuild the robot model for every candidate (original behaviour)
+
     def __init__(self, base):
         self.base = base
         self.OMCM = ObjectModelConfigManager.ObjectModelConfigManager(self.base)
+        self._Ms = None
+
+    def get_motion_storage(self):
+        """ロボットモデルは1ステップにつき1回だけ生成し、候補ごとに初期状態へ戻す
+        Build the robot model once per step and reset it to its initial state for each candidate"""
+        if not self.reuse_robot:
+            return Motion_storage.WRSA_motion_storage(self.base)
+        if self._Ms is None:
+            self._Ms = Motion_storage.WRSA_motion_storage(self.base)
+            robot = self._Ms.robot_s
+            # RobotiqHEは開き幅を返さないので指の関節値を保存 / RobotiqHE has no get_jawwidth, so store its finger joint value
+            self._initial_state = {hnd: (robot.get_jnt_values(hnd), robot.hnd_dict[hnd].lft.jnts[1]['motion_val']) for hnd in ('rgt_hnd', 'lft_hnd')}
+        else:
+            robot = self._Ms.robot_s
+            # 失敗した候補が把持したままのオブジェクトを解放 / release objects a failed candidate left in the hand
+            for hnd, oih_infos in (('lft_hnd', robot.lft_oih_infos), ('rgt_hnd', robot.rgt_oih_infos)):
+                for obj_info in list(oih_infos):
+                    robot.release(hnd, obj_info['collision_model'])
+            for hnd, (jnt_values, finger_value) in self._initial_state.items():
+                robot.fk(hnd, jnt_values)
+                robot.hnd_dict[hnd].fk(motion_val=finger_value)
+        return self._Ms
  
     def get_target_node(self, tree, task_num):
         turget_nodes = [key for key in tree.nodes.keys() if tree.nodes[key]['level'] == task_num]
@@ -32,7 +56,7 @@ class ExecutionChecker():
         available_area = copy.deepcopy(Tree.tree.nodes[parent_node]['available_area'])
         obj_pos_dic = copy.deepcopy(Tree.tree.nodes[parent_node]['obj_pos_dic'])
         obj_model_dic = self.OMCM.set_object_model(obj_pos_dic, EG)
-        Ms = Motion_storage.WRSA_motion_storage(self.base)
+        Ms = self.get_motion_storage()
         if Tree.tree.nodes[parent_node]['conf_list'] != {}:
             Ms.robot_s.fk('rgt_hnd', Tree.tree.nodes[parent_node]['conf_list']['rgt_hnd'][-1])
             Ms.robot_s.jaw_to('rgt_hnd', Tree.tree.nodes[parent_node]['jawwidth_list']['rgt_hnd'][-1])
@@ -395,7 +419,7 @@ class ExecutionChecker():
         return result
         
         
-    def main(self, Tree, task_num, task, FOON, save_file):
+    def main(self, Tree, task_num, task, FOON, save_folder, save_file):
         """ノードから環境を取り出し実行できるか確認する関数です。
         1. treeから実行可否判定するノードを取り出す
         for ノード
@@ -419,7 +443,7 @@ class ExecutionChecker():
             
             if result == True:
                 return [node]
-            Fm.save_pickle_file('/path/to/object_placement', save_file, Tree.tree)
+            Fm.save_pickle_file(save_folder, save_file, Tree.tree)
             del Ms
         del self.OMCM
         return []

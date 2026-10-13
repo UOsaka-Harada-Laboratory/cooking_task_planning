@@ -1,0 +1,76 @@
+<task>
+You are an expert in the Function Object-Oriented Network (FOON). I will provide you with an image that is a part of a cooking video. This image is a collection of frames divided by subtitles. Based on the content of the subtitles, determine whether the image depicts an action or just an introduction to the dish. If the subtitles include an action, please identify the action. If the subtitles do not include any action, return None.
+
+Express the result of the action in an object node. Select only one action to answer. If the same subtitle includes multiple actions, it is likely to be an introduction to the dish, so you can return None.
+
+Additionally, please explain why you made that determination.
+</task>
+
+
+<Procedure>
+1. Compare the overall subtitles with previous subtitles to determine the current stage of the cooking process. 
+2. Predict what kind of operation is being performed based on the subtitles. 
+3. Predict what kind of action is being performed based on the image. 
+4. Estimate dependencies that are not clear from the image information using object nodes from previous prompts. 
+5. Comprehensive evaluation.
+</Procedure>
+
+
+<Constraints>
+- Object nodes must use the same label after cooking (e.g., when making fried chicken, the label of the object node should remain "chicken" even after frying). 
+- The container of the food object must never be None.
+</Constraints>
+
+
+<Content of Input Text> 
+Allowed actions: These are actions that the robot can perform. If it's not an allowed action, ignore it. For images that do not contain actions (such as images of finished products or showing the dish), output None. 
+Allowed physical_state: The allowed physical states of the ingredients (liquid, solid) 
+Allowed cutting_style: The allowed cutting styles of the ingredients (Chopped) 
+Allowed cooking_method: The allowed cooking methods of the ingredients 
+Allowed container state: The state of the allowed containers (such as plates and pans) (input in equipment_status) 
+Allowed tool state: The state of the allowed cooking tools (such as knives and ladles) (input in equipment_status) 
+Allowed machine state: The state of the allowed cooking machines (such as stoves and microwaves) (input in equipment_status) 
+Video title: The title of the video 
+All caption for the video: All the subtitles included in the video 
+Input image caption: The subtitle of the scene in the input image 
+</Content of Input Text>
+
+
+<出力の内容>
+ [{
+"comment":"",				###Reason for Determining the Output
+"motion":'Cut',				###The action depicted in the image
+"object":[				###State of the object after being changed by the action
+{
+ "label": "chicken",			###Object Name
+ "type": "ingredients",			###Object Type
+ "ingredients": [],			###Related Ingredients
+ "physical_state" : "solid"		###Food Condition
+ "cutting_style" : "chope"		###How to cut ingredients
+ "cooking_method" : "raw"		###Overheating condition of food
+ "container": ["bowl"],			###Related Containers
+ "place": "workspace",			###Space in which the object resides
+ "machine": []				###Machines used (stoves and microwave ovens)
+ "equipment_status":""			###Condition of machine (stove), utensil (knife), or container}
+{
+ "label": "bowl",			
+ "type": "container", 
+ "states": ["filled"],
+ "ingredients": ["chicken"],
+ "container": [],
+ "place": "workspace",
+ "machine": [],
+ "label": "bowl",			###Object Name
+ "type": "container",			###Object Type
+ "ingredients": [chicken],		###Related Ingredients
+ "physical_state" : ""			###Food Condition
+ "cutting_style" : ""			###How to cut ingredients
+ "cooking_method" : ""			###Overheating condition of food
+ "container": []			###Related Containers
+ "place": "workspace",			###Space in which the object resides
+ "machine": []				###Machines used (stoves and microwave ovens)
+ "equipment_status":"dirty"		###Condition of machine (stove), utensil (knife), or container}
+}
+]
+}]
+</出力の内容>

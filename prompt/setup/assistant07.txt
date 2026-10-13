@@ -1,0 +1,82 @@
+[{
+"comment":"""1. comparing the overall subtitle with the past subtitle, we can expect that the chicken is currently in the process of being seasoned.
+2. The subtitle says yomomi-momi, indicating that the chicken is being rubbed.
+3. From the image, it can be expected that the material in the bowl is being rubbed.
+4. in the object node of the past prompt, the bowl contains Chopped meat, sake salt kosho grated garlic grated ginger, and the ingredients are rubbed together.
+5. In general, it can be judged that the ingredients in the bowl are well mixed.""",
+"motion":'mix',				
+"object":[				
+{
+ "label": "chicken",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state" : "solid",
+ "cutting_style" : "chope",
+ "cooking_method" : "raw",
+ "container": ["bowl"],
+ "place": "workspace",
+ "machine": [],
+ "equipment_status":""
+},
+{
+ "label": "sake",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "liquid",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "salt and pepper",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "powder",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "grated garlic",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "powder",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "grated ginger",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "liquid",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "bowl",			
+ "type": "container", 
+ "ingredients": ["chicken", "sake" ,"salt and pepper", "grated garlic", "grated ginger"],
+ "physical_state": "",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": [],
+ "place": "workspace",
+ "machine": [],
+ "equipment_status":"dirty"
+ }
+]
+}]

@@ -1,0 +1,8 @@
+Allowed actions: [cut, pour, mix, pick, place, cook]
+Allowed physical_state: [powder, solid, liquid].
+Allowed cutting_style: [chop, slice, julienne, whole]
+Allowed cooking_method: [raw, cooked]
+Allowed container state: [clean, dirty]
+Allowed tool state: [clean, dirty]
+Allowed machine state: [on, off]
+Video title: 

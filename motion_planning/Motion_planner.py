@@ -4,6 +4,7 @@ Created on Fri Dec 13 17:47:42 2024
 
 @author: Shoichi
 """
+import os
 import File_management as Fm
 import random
 import ObjectModelConfigManager
@@ -19,7 +20,9 @@ import Execution_Checker
 import Motion_storage
 import sub_analyze_graph
 import tracemalloc
-import winsound
+import argparse
+
+REPO_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 
 class MotionPrep():
     def __init__(self, base):
@@ -34,42 +37,41 @@ class MotionPrep():
         出力
         EG:環境オブジェクトノードにstl_pathの属性を追加
         """
-        input('set')
         stl_object_key = [key for key in EG.nodes.keys() if '_C_' in key or '_T_' in key or '_M_' in key or '_F_' in key]
-        path = Fm.get_current_path()
+        path = REPO_ROOT
         for key in stl_object_key:
             if 'pinch_bowl' in EG.nodes[key]['label'] or 'cup' in EG.nodes[key]['label']:
-                EG.nodes[key]['stl_path'] = fr'{path}\stl\mini_bowl_bowl.stl'
-                EG.nodes[key]['grasp_info_list'] = fr'{path}\stl\grasp\mini_bowl_bowl2.pickle'
+                EG.nodes[key]['stl_path'] = os.path.join(path, 'stl', 'mini_bowl_bowl.stl')
+                EG.nodes[key]['grasp_info_list'] = os.path.join(path, 'stl', 'grasp', 'mini_bowl_bowl2.pickle')
             elif 'tray' in EG.nodes[key]['label']:
-                EG.nodes[key]['stl_path'] = fr'{path}\stl\bat.stl'
-                EG.nodes[key]['grasp_info_list'] = fr'{path}\stl\grasp\bat2.pickle'
+                EG.nodes[key]['stl_path'] = os.path.join(path, 'stl', 'bat.stl')
+                EG.nodes[key]['grasp_info_list'] = os.path.join(path, 'stl', 'grasp', 'bat2.pickle')
             elif 'bowl' in EG.nodes[key]['label']:
-                EG.nodes[key]['stl_path'] = fr'{path}\stl\bowl.stl'
-                EG.nodes[key]['grasp_info_list'] = fr'{path}\stl\grasp\bowl2.pickle'
+                EG.nodes[key]['stl_path'] = os.path.join(path, 'stl', 'bowl.stl')
+                EG.nodes[key]['grasp_info_list'] = os.path.join(path, 'stl', 'grasp', 'bowl2.pickle')
             elif 'pan' in EG.nodes[key]['label']:
-                EG.nodes[key]['stl_path'] = fr'{path}\stl\pan.stl'
-                EG.nodes[key]['grasp_info_list'] = fr'{path}\stl\grasp\pan2.pickle'
+                EG.nodes[key]['stl_path'] = os.path.join(path, 'stl', 'pan.stl')
+                EG.nodes[key]['grasp_info_list'] = os.path.join(path, 'stl', 'grasp', 'pan2.pickle')
             elif 'cutting board' in EG.nodes[key]['label']:
-                EG.nodes[key]['stl_path'] = fr'{path}\stl\cutting_board.stl'
-                EG.nodes[key]['grasp_info_list'] = fr'{path}\stl\grasp\cutting_board2.pickle'
+                EG.nodes[key]['stl_path'] = os.path.join(path, 'stl', 'cutting_board.stl')
+                EG.nodes[key]['grasp_info_list'] = os.path.join(path, 'stl', 'grasp', 'cutting_board2.pickle')
             elif 'stove' in EG.nodes[key]['label']:
-                EG.nodes[key]['stl_path'] = fr'{path}\stl\stove.stl'
-                EG.nodes[key]['grasp_info_list'] = fr'{path}\stl\grasp\stove.pickle'
+                EG.nodes[key]['stl_path'] = os.path.join(path, 'stl', 'stove.stl')
+                EG.nodes[key]['grasp_info_list'] = os.path.join(path, 'stl', 'grasp', 'stove.pickle')
             elif 'knife' in EG.nodes[key]['label']:
-                EG.nodes[key]['stl_path'] = fr'{path}\stl\knife.stl'
-                EG.nodes[key]['grasp_info_list'] = fr'{path}\stl\grasp\knife2.pickle'
+                EG.nodes[key]['stl_path'] = os.path.join(path, 'stl', 'knife.stl')
+                EG.nodes[key]['grasp_info_list'] = os.path.join(path, 'stl', 'grasp', 'knife2.pickle')
             elif 'spatula' in EG.nodes[key]['label']:
-                EG.nodes[key]['stl_path'] = fr'{path}\stl\spatula.stl'
-                EG.nodes[key]['grasp_info_list'] = fr'{path}\stl\grasp\spatula2.pickle'
+                EG.nodes[key]['stl_path'] = os.path.join(path, 'stl', 'spatula.stl')
+                EG.nodes[key]['grasp_info_list'] = os.path.join(path, 'stl', 'grasp', 'spatula2.pickle')
             elif 'ingredients' in EG.nodes[key]['type'] and 'whole' in EG.nodes[key]['cutting_style']:
                 if EG.nodes[key]['label'] == 'pork':
-                    EG.nodes[key]['stl_path'] = fr'{path}\stl\pork.stl'
+                    EG.nodes[key]['stl_path'] = os.path.join(path, 'stl', 'pork.stl')
                 elif EG.nodes[key]['label'] == 'onion':
-                    EG.nodes[key]['stl_path'] = fr'{path}\stl\onion.stl'
+                    EG.nodes[key]['stl_path'] = os.path.join(path, 'stl', 'onion.stl')
                 else:
-                    EG.nodes[key]['stl_path'] = fr'{path}\stl\food.stl'
-                EG.nodes[key]['grasp_info_list'] = fr'{path}\stl\grasp\food3.pickle'
+                    EG.nodes[key]['stl_path'] = os.path.join(path, 'stl', 'food.stl')
+                EG.nodes[key]['grasp_info_list'] = os.path.join(path, 'stl', 'grasp', 'food3.pickle')
             else:
                 print(key)
                 print(EG.nodes[key]['label'])
@@ -118,7 +120,7 @@ class MotionPrep():
         num = [cell[0] for cell in num_cells]
         return list(itertools.combinations(num, num_objects))
     
-    def set_enviroment_object(self, EG, ave_area, save_folder, initial_placement_toggle = False):
+    def set_enviroment_object(self, EG, ave_area, save_folder, initial_placement_toggle = False, used_labels=()):
         """
         環境オブジェクトの初期配置を決定する関数
         入力:
@@ -155,7 +157,9 @@ class MotionPrep():
             
             "right_storageの配置場所の決定"
             ###set_up
-            right_object = [['None', key] for key in EG.nodes.keys() if EG.nodes[key]['place'] == 'right_storage' and EG.nodes[key]['label'] not in ['bowl0', 'bowl1', 'frying pan']]
+            # 既定の容器のうちタスク計画で使わないものは配置しない / default containers the plan never uses are not placed
+            unused_containers = {'bowl0', 'bowl1', 'frying pan'} - set(used_labels)
+            right_object = [['None', key] for key in EG.nodes.keys() if EG.nodes[key]['place'] == 'right_storage' and EG.nodes[key]['label'] not in unused_containers]
             right_area = [ [i, point] for i, point in enumerate(ave_area) if point[3] == 1]
             placements = self.explore_all_placements(len(right_object), right_area)
             random.shuffle(placements)
@@ -178,14 +182,13 @@ class MotionPrep():
             object_area = []
             object_area.append([machine_object[0], machine_area[0]])
             OMCM = ObjectModelConfigManager.ObjectModelConfigManager(self.base)
-            OMCM.set_object(object_area[-1:])
-            OMCM.set_obj_pos(object_area[-1:])
-            Fm.save_pickle_file(self.save_folder, 'stove_storage_placement_fin.pickle', object_area)
+            OMCM.set_object(object_area[-1:], EG)
+            Fm.save_pickle_file(save_folder, 'stove_storage_placement_fin.pickle', object_area)
             
-            input("計算終了しました！！！")
+            print("計算終了しました！！！ / Placement computed")
         else:
-            right_area_placement = Fm.load_pickle_file(Fm.join_path_and_filename('path/to/motion_planning/save', 'right_storage_placement_fin_rot_005_20240201.pickle'))
-            left_area_placement = Fm.load_pickle_file(Fm.join_path_and_filename('path/to/motion_planning/save', 'left_storage_placement_fin_rot_005_20240201.pickle'))
+            right_area_placement = Fm.load_pickle_file(Fm.join_path_and_filename(save_folder, 'right_storage_placement_fin_rot_005_20240201.pickle'))
+            left_area_placement = Fm.load_pickle_file(Fm.join_path_and_filename(save_folder, 'left_storage_placement_fin_rot_005_20240201.pickle'))
             "machineの配置場所の決定"
             machine_object = [['None', key] for key in EG.nodes.keys() if EG.nodes[key]['place'] == 'workspace' and '_M_' in key]
             machine_area = [ [i, point] for i, point in enumerate(ave_area) if point[3] == 0 and i == machine_num]
@@ -201,7 +204,7 @@ class MotionPrep():
 class Motion_planner():
     def __init__(self):
         print('start')
-        self.ave_area = Fm.load_csv_file(fr'{Fm.get_current_path()}\UR3dual\ave_point_rot_005_main.csv')
+        self.ave_area = Fm.load_csv_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'wrs_reachability', 'ave_point_rot_005_main.csv'))
         self.ave_area.append([0.90, 0.025, 0.7825, 0])
         self.base = wd.World(cam_pos=[5,0,3],lookat_pos=[0,0,1])
         self.ans = None
@@ -243,7 +246,13 @@ class Motion_planner():
             obj_pos_dic[key] = [area[i]+np.array([0, 0, 0.01]), rotmat]
         return obj_pos_dic
 
-    def main(self, EG, FOON, plan_tree_file='', start_tree_level=0, toggle_tree_cut=False, toggle_change_node_pos=False):
+    def animate(self, node, T_tree):
+        """rootからnodeまでの動作を再生（ウィンドウを閉じると終了）/ play the motions from the root to node (closing the window ends the program)"""
+        Ms = Motion_storage.WRSA_motion_storage(self.base)
+        motion_list = sub_analyze_graph.get_robot_motion_list(node, T_tree.tree)
+        Ms.animation_dict(motion_list, toggle_image=False)
+
+    def main(self, EG, FOON, save_folder, compute_placement=True, plan_tree_file='', start_tree_level=0, toggle_tree_cut=False, toggle_change_node_pos=False, animate_each_step=True):
         '''動作計画をするクラスです
         0. 初期配置が可能な場所の探索
         
@@ -260,19 +269,18 @@ class Motion_planner():
         
         
         Mpre = MotionPrep(self.base)
-        EG, right_area_placement, left_area_placement, object_area = Mpre.set_enviroment_object(EG, self.ave_area, '/path/to/motion_planning/save', initial_placement_toggle = False)
-        right_area_placement[3][2][1][0]= 48
-        right_area_placement[3][2][1][1]= [0.65, -0.3, 0.7825, 1]
-        right_area_placement[3][0][1][0] = 20
-        right_area_placement[3][0][1][1] = [0.9, -0.45, 0.7825, 1]
-        right_area_placement[3][1][1][0] = 13
-        right_area_placement[3][1][1][1] = [0.5, -0.45, 0.7825, 1]
-        right_area_placement[3][3][1][0] = 70
-        right_area_placement[3][3][1][1] = [0.55, -0.2, 0.7825, 1]
+        # compute_placement=False は save_folder に保存済みの配置を読み込む / reuses placements saved in save_folder
+        used_labels = set()
+        for task in Tt.TreeGraph().extract_tasks_from_graph(FOON[-1]):
+            obj = task[1]['object']
+            used_labels.update(obj if isinstance(obj, list) else [obj])
+        EG, right_area_placement, left_area_placement, object_area = Mpre.set_enviroment_object(EG, self.ave_area, save_folder, initial_placement_toggle=compute_placement, used_labels=used_labels)
         
         
         
-        for right_area, left_area in zip(right_area_placement[3:], left_area_placement):
+        if not right_area_placement or not left_area_placement:
+            raise RuntimeError(f'No graspable initial object placement found (see {save_folder})')
+        for right_area, left_area in zip(right_area_placement, left_area_placement):
             all_area = {'right_storage':[[i, area[:3]] for i, area in enumerate(self.ave_area) if area[3] == 1], 'workspace':[[i, area[:3]] for i, area in enumerate(self.ave_area) if area[3] == 0], 'left_storage':[[i, area[:3]] for i, area in enumerate(self.ave_area) if area[3] == 2]}
             available_area = copy.deepcopy(all_area)
             ing_list_r = self.set_EG_area(right_area, EG)
@@ -296,42 +304,56 @@ class Motion_planner():
                 if toggle_change_node_pos:
                     T_tree.Change_node_obj_pos('EO_000_C_003', 167, [0.7,0.25,0.7825+0.02])
                 if start_tree_level == 0:
-                    leaf_id, task_num = T_tree.get_leaf_nodes()
+                    # 動作計画に成功した最も深いノード（conf_listを持つ）の次のタスクから再開
+                    # Resume after the deepest validated step (only validated nodes have a conf_list)
+                    validated = [n for n, d in T_tree.tree.nodes(data=True) if 'conf_list' in d]
+                    last_step = max(validated, key=lambda n: T_tree.tree.nodes[n]['level'])
+                    parent_id = [last_step]
+                    task_num = T_tree.tree.nodes[last_step]['level']
+                    print(f'Resuming after step {task_num}/{len(T_tree.extract_tasks_from_graph(FOON[-1]))}')
                 else:
                     leaf_id = T_tree.get_nodes_from_level(start_tree_level)
                     task_num = start_tree_level-1
                     if toggle_tree_cut:
                         T_tree.trim_tree_from_level(start_tree_level+1)
-                parent_id = [T_tree.get_parent(leaf_id[0])]
+                    parent_id = [T_tree.get_parent(leaf_id[0])]
             FOON_i = FOON[-1]
             
             "２．タスクごとに実行可能か比較する為の木グラフを作成する"
             task_list = T_tree.extract_tasks_from_graph(FOON_i)
             save_file = 'FOON0.pickle'
             while True:
+                if task_num >= len(task_list):
+                    print('全タスクの動作計画が完了しました / Motion plan found for all tasks')
+                    Fm.save_pickle_file(save_folder, save_file, T_tree.tree)
+                    if not animate_each_step:
+                        # タスク全体のアニメーション / animation of the whole plan
+                        self.animate(parent_id[0], T_tree)
+                    return T_tree.tree
                 task = task_list[task_num]
                 task_num += 1
                 if T_tree.get_children(parent_id[0]) == []:
                     id_list = T_tree.assign_tasks_to_tree_nodes(task, EG, available_area, parent_id, FOON_i, task_num)
                 self.ans = T_tree.tree
                 # T_tree.visualize()
-                input(task)
-                Fm.save_pickle_file('/path/to/object_placement', save_file, T_tree.tree)
+                print(task)
+                Fm.save_pickle_file(save_folder, save_file, T_tree.tree)
             
                 
                 "３．木グラフの状態に従い動作の実行可否判定"
                 EC = Execution_Checker.ExecutionChecker(self.base)
-                ex_id = EC.main(T_tree, task_num, task, FOON_i, save_file)
+                ex_id = EC.main(T_tree, task_num, task, FOON_i, save_folder, save_file)
                 
                 if ex_id != []:
-                    winsound.Beep(1000, 1000)  # 周波数1000Hzの音を0.5秒鳴らす
+                    Fm.beep()  # 通知音
                     parent_id = ex_id
-                    Ms = Motion_storage.WRSA_motion_storage(self.base)
-                    motion_list =  sub_analyze_graph.get_robot_motion_list(parent_id[0], T_tree.tree)
-                    Ms.animation_dict(motion_list, toggle_image=False)
+                    # アニメーション前に保存（ウィンドウを閉じると終了するため）/ save before the animation: closing its window ends the program
+                    Fm.save_pickle_file(save_folder, save_file, T_tree.tree)
+                    print(f'Step {task_num}/{len(task_list)} planned: {task[1]["label"]} {task[1]["object"]}')
+                    if animate_each_step:
+                        self.animate(parent_id[0], T_tree)
                 else:
-                    winsound.Beep(1000, 1000)  # 周波数1000Hzの音を0.5秒鳴らす
-                    winsound.Beep(1000, 1000)  # 周波数1000Hzの音を0.5秒鳴らす
+                    Fm.beep(2)  # 通知音
                     grand_parent_id = T_tree.get_parent(parent_id[0])
                     T_tree.remove_node_and_descendants(parent_id[0])
                     parent_id = [grand_parent_id]
@@ -344,13 +366,21 @@ class Motion_planner():
             
 
 if __name__ == '__main__':
-    resulet_pickle = Fm.load_pickle_file('path/to/result.pickle')
-    EG = Fm.load_json_as_graph('/path/to/Environmental_Object_Node/EO000.json')
+    parser = argparse.ArgumentParser(description='Motion planning for a FOON task plan (requires WRS and a display).')
+    parser.add_argument('--result', required=True, help='FOON/result.pickle written by TaskPlanner.py')
+    parser.add_argument('--env', required=True, help='Environmental_Object_Node/EO000.json written by EnvObjectNode.py')
+    parser.add_argument('--save-folder', required=True, help='folder for object placements and the motion plan tree (FOON0.pickle)')
+    parser.add_argument('--reuse-placement', action='store_true', help='load the object placements saved in --save-folder by a previous run instead of computing them')
+    parser.add_argument('--tree-file', default='', help='resume from a saved motion plan tree (e.g. <save-folder>/FOON0.pickle): planning continues after the last planned step')
+    parser.add_argument('--start-tree-level', type=int, default=0, help='with --tree-file: instead re-plan from this tree level (0 = continue after the last planned step)')
+    parser.add_argument('--tree-cut', action='store_true', help='with --start-tree-level: drop the tree below that level')
+    parser.add_argument('--final-animation-only', action='store_true', help='plan all remaining steps without stopping and only animate the whole plan at the end')
+    args = parser.parse_args()
+
+    resulet_pickle = Fm.load_pickle_file(args.result)
+    EG = Fm.load_json_as_graph(args.env)
     FOON = [result[0] for result in resulet_pickle]
-    save_folder = 'path/to/object_placement'
-    tree_file = 'path/to/object_placement/FOON0.pickle'
-    FOON[7].nodes['FO_020_C_011']['place'] = 'workspace'
     MP = Motion_planner()
-    right_area_placement = MP.main(EG, FOON, tree_file, start_tree_level=32, toggle_tree_cut=False, toggle_change_node_pos=False)
-    # right_area_placement=MP.main(EG, FOON)
-    # ans = MP.ans
+    tree = MP.main(EG, FOON, args.save_folder, compute_placement=not args.reuse_placement,
+                   plan_tree_file=args.tree_file, start_tree_level=args.start_tree_level, toggle_tree_cut=args.tree_cut,
+                   animate_each_step=not args.final_animation_only)

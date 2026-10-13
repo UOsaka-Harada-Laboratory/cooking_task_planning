@@ -17,10 +17,13 @@ import math
 import numpy as np
 import robot_sim.robots.ur3e_dual.ur3e_dual as ur
 import wrs.manipulation.pick_place_planner as ppp
-import keyboard
 import time
 import Motion_storage
 import copy
+
+
+# 読み込んだSTLモデルのキャッシュ（候補ごとにコピーして使う）/ loaded STL models, copied for each use
+_MESH_CACHE = {}
 
 
 class ObjectModelConfigManager:
@@ -56,7 +59,9 @@ class ObjectModelConfigManager:
         obj_model_dic = {}
         for i, key in enumerate(obj_pose_dic.keys()):
             stl_path = EG.nodes[key]['stl_path']
-            object_ = cm.CollisionModel(stl_path)
+            if stl_path not in _MESH_CACHE:
+                _MESH_CACHE[stl_path] = cm.CollisionModel(stl_path)
+            object_ = _MESH_CACHE[stl_path].copy()
             object_.set_rgba([0.7, 0.7, 0.0, 1])
             # object_.show_localframe()
             # object_.show_cdprimit()

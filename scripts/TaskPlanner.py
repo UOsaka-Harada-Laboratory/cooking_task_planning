@@ -41,7 +41,7 @@ class TaskPlanner:
             print(error_state)
             target = json.dumps(nx.node_link_data(t), indent=4)
             # input(target)
-            self.task_plan, user_input = self.FOON.main(json.dumps(nx.node_link_data(Graph_enviroment_node), indent=4), target, save_file_path=fr'{save_folder}/prompt_{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')}')
+            self.task_plan, user_input = self.FOON.main(json.dumps(nx.node_link_data(Graph_enviroment_node), indent=4), target, save_file_path=fr'{save_folder}/prompt_{datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f")}')
             while error_state != "No error":
                 self.prompt = self.FOON.gpt.prompt
                 self.TE = TaskExecutionValidator.TaskExecutionValidator(Graph_enviroment_node, user_input, FOON_graph)
@@ -54,7 +54,7 @@ class TaskPlanner:
                 self.task_list = self.TE.task_list
                 print(error_state)
                 if error_state != "No error":
-                    self.task_plan = self.FOON.error(error_state, togle, save_file_path=fr'{save_folder}/prompt_{datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S_%f')}')
+                    self.task_plan = self.FOON.error(error_state, togle, save_file_path=fr'{save_folder}/prompt_{datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S_%f")}')
                     error_log.append([self.TE.Env_Grapf, self.TE.FOON, self.task_list, self.task_plan, self.TE.Functional_unit_list, error_state, self.prompt])
                     os.makedirs(save_folder, exist_ok=True)
                     # Define the file path

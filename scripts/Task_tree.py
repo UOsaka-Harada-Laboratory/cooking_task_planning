@@ -12,7 +12,7 @@ import File_management as Fm
 import graph_key_search as gks
 from itertools import product
 import copy
-import basis.robot_math as rm
+import robot_math as rm
 import numpy as np
 import random
 
@@ -190,7 +190,6 @@ class TreeGraph:
         target_object_key = [key for key in out_object_key if FOON.nodes[key]['label'] == task[1]['object']]
         target_EG_key = gks.find_target_node_by_label(EG, task[1]['object'])
         place = FOON.nodes[target_object_key[0]]['place']
-        input(place)
         if FOON.nodes[target_object_key[0]]['type'] == 'ingredients':
             turget_container_key = FOON.nodes[target_object_key[0]]['container'][1]
             target_area = [[EG.nodes[turget_container_key]['area'], EG.nodes[turget_container_key]['pos']]]
@@ -274,7 +273,7 @@ class TreeGraph:
         elif action == 'Mix':
             id_list = self.create_mix_motion_tree(task[1], EG, ava_area, parent_id, task_num)
         else:
-            input('未実装')
+            raise NotImplementedError(f'未実装の動作 / motion tree not implemented for action: {action}')
         return id_list    
       
             

@@ -1,0 +1,13 @@
+<output>
+<Infeasible Cause>
+- The task attempts to pick up chopped chicken directly, which is not feasible.
+</Infeasible Cause>
+<Fixes>
+- Use the Pour action to transfer the chopped chicken from the cutting board to the pan.
+</Fixes>
+<Task>
+1. Pic | pan | right_storage | right_hand
+2. Place | pan | workspace | right_hand
+3. Pour | cutting board | pan | left_hand
+</Task>
+</output>

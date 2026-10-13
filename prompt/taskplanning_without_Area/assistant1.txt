@@ -1,0 +1,47 @@
+<Required main actions>
+1. Cut the chicken
+2. Pour sake into the bowl with chicken
+</Required main actions>
+
+<Required sub actions>
+1. Move the cutting board into the workspace and prepare to cut.
+2. Transfer chicken to the cutting board and cut it.
+3. Transfer the cut chicken to the bowl.
+4. Pour sake into the bowl with chicken.
+</Required sub actions>
+
+<Task>
+1. Pic | cutting board | right_storage | right_hand
+2. Place | cutting board | workspace | right_hand
+3. Pic | chicken | tray_001 | left_hand
+4. Place | chicken | cutting board | left_hand
+5. Pic | knife | right_storage | right_hand
+6. Cut | chicken | chop | right_hand
+7. Place | knife | right_storage | right_hand
+8. Pic | bowl | right_storage | right_hand
+9. Place | bowl | workspace | right_hand
+10. Pic | cutting board | workspace | left_hand
+11. Pour | cutting board | bowl | left_hand
+12. Place | cutting board | workspace | left_hand
+13. Pic | cup_000 | left_storage | left_hand
+14. Pour | cup_000 | bowl | left_hand
+15. Place | cup_000 | left_storage | left_hand
+</Task>
+
+<Reason for selecting the action>
+1. You need to move the cutting board to the workspace to cut the chicken.
+2. You prepare the cutting board by placing it on the workspace.
+3. You need to lift the chicken to move it to the cutting board to cut it.
+4. Placing the chicken on the cutting board is necessary for cutting.
+5. You need to select a knife to cut the chicken.
+6. Cutting the chicken is necessary to achieve the desired state.
+7. You need to select a bowl to transfer the chicken to.
+8. You need to place the knife to use your right hand.
+9. Placing the bowl on the workspace allows for easy access.
+10. You need to use Pour to transfer the cut chicken to the bowl, so you need to lift the cutting board.
+11. You use the Pour action to transfer the cut chicken to the bowl.
+12. Return the cutting board to its original position.
+13. Pick up cup_000 to pour the sake into the bowl.
+14. You need to pour the sake into the bowl.
+15. Return cup_000 to its original position.
+</Reason for choosing this action></Reason for selecting the action>

@@ -1,0 +1,82 @@
+[{
+"comment":"""1. comparing the overall subtitle with the past subtitle, we can expect that the chicken is currently in the process of being seasoned.
+2. subtitle says “chicken with sake, salt, kosho, grated garlic, grated ginger,” and we can expect these ingredients in the chicken.
+3. From the image, we can expect to see alcohol, salt, kosho, grated garlic, and grated ginger in the bowl.
+4. in the object node of the past prompt, there is alcohol and chicken in a bowl, to which additional salt kosho grated garlic grated ginger is added.
+5. As a general comment, it can be judged that salt, pepper, grated garlic, and grated ginger are added to the bowl containing the chopped meat and alcohol.""",
+"motion":'pour',				
+"object":[				
+{
+ "label": "chicken",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state" : "solid",
+ "cutting_style" : "chope",
+ "cooking_method" : "raw",
+ "container": ["bowl"],
+ "place": "workspace",
+ "machine": [],
+ "equipment_status":""
+},
+{
+ "label": "sake",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "liquid",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "salt and pepper",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "powder",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "grated garlic",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "powder",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "grated ginger",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "liquid",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "bowl",			
+ "type": "container", 
+ "ingredients": ["chicken", "sake" ,"salt and pepper", "grated garlic", "grated ginger"],
+ "physical_state": "",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": [],
+ "place": "workspace",
+ "machine": [],
+ "equipment_status":"dirty"
+ }
+]
+}]

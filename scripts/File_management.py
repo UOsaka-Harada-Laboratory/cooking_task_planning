@@ -13,6 +13,16 @@ import csv
 import networkx as nx
 import json
 
+def beep(times=1, interval=0.2):
+    """
+    端末ベルを鳴らす（winsound.Beep のクロスプラットフォーム代替）
+    """
+    import sys, time
+    for _ in range(times):
+        sys.stdout.write('\a')
+        sys.stdout.flush()
+        time.sleep(interval)
+
 def get_current_path():
     """
     現在のディレクトリのパスを取得する関数

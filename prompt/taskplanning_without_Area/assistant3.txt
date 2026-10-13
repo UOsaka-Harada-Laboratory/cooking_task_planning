@@ -1,0 +1,21 @@
+<output>
+<Infeasible Cause>
+- The right hand was not holding the pan when attempting to place it on the stove.
+</Infeasible Cause>
+<Fixes>
+- Ensure the right hand picks up the pan before placing it on the stove.
+</Fixes>
+<Task>
+1. Pic | pan | right_storage | right_hand
+2. Place | pan | workspace | right_hand
+3. Pic | cup_000 | left_storage | left_hand
+4. Pour | cup_000 | pan | left_hand
+5. Place | cup_000 | left_storage | left_hand
+6. Pic | bowl | workspace | left_hand
+7. Pour | bowl | pan | left_hand
+8. Place | bowl | workspace | left_hand
+9. Pic | pan | workspace | right_hand
+10. Place | pan | stove | right_hand
+11. Cook | [chicken, oil] | pan | medium | stove | right_hand
+</Task>
+</output>

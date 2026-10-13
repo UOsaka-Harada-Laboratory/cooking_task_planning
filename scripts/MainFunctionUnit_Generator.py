@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from graphviz import Digraph
 from networkx.drawing.nx_agraph import graphviz_layout
 
+REPO_ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
+
 class MainFunctionUnit_Generator():
     def __init__(self):
         self.G_list = []
@@ -26,10 +28,10 @@ class MainFunctionUnit_Generator():
         
     def Object_Creation_Error_Detector(self, ans):
         # input(type(ans[0]['object']))
-        if type(ans[0]['object']) == 'list':
+        if isinstance(ans[0]['object'], list):
             for i, obj in enumerate(ans[0]['object']):
                 if obj['ingredients'] is None and obj['container'] is None:
-                    self.gpt.prompt_role_assistant_add(ans)
+                    # The answer is already in the prompt (added by Target_Object_user_input)
                     self.gpt.prompt_role_user_add('ingredientsは必ずcontainerの上にあるようにしてください。つまりingredientsがオブジェクトに含まれる場合は必ず, containerオブジェクトも含めてください')
                     responce = self.gpt.GPT4o_exe()
                     return False, responce
@@ -39,7 +41,7 @@ class MainFunctionUnit_Generator():
         pickle_file_path = sorted(os.listdir(save_folder_path))
         if pickle_file_path is not None:
             if "Target_Object_list.pickle" in pickle_file_path:
-                with open(os.path.join(save_folder_path, "Target_Object_list.pickle")) as file:
+                with open(os.path.join(save_folder_path, "Target_Object_list.pickle"), 'rb') as file:
                     self.Target_Object_list = pickle.load(file)
                 list_num = len(self.Target_Object_list)
             else:
@@ -50,13 +52,13 @@ class MainFunctionUnit_Generator():
         for i, img_name in enumerate(sorted(img_list, key=self.extract_number)[list_num:]):
             i = i + list_num
             print(f"\n-----------------{i+1}/{len(img_list)}-----------------\n")
-            img_path = os.path.join(input_folder, img_name)
+            img_path = os.path.join(self.input_folder, img_name)
             ###gptによる目標オブジェクト状態推定 / Estimation of target object state by gpt
             if i == 0:
                 self.gpt.text2prompt(prompt_path, save_file_path)
 
             if i < len(word_list):
-                ans = self.gpt.Target_Object_user_input(self.V_title, img_path, word_list, i, temp_file_path="./prompt/template/temp.txt" )
+                ans = self.gpt.Target_Object_user_input(self.V_title, img_path, word_list, i, temp_file_path=os.path.join(REPO_ROOT, "prompt", "template", "temp.txt"))
             else:
                 continue
             ans = self.word2code(ans)
@@ -64,9 +66,9 @@ class MainFunctionUnit_Generator():
             ###エラー検出 / Error detection
             flag, res = self.Object_Creation_Error_Detector(ans)
             if flag == False:
-                ans = res
-                input(f'エラーが出ました。')
-                input(ans)
+                print('エラーが出ました。/ Object creation error, using the corrected answer.')
+                ans = self.word2code(res)
+                self.gpt.prompt_role_assistant_add(res)
             ###文字のコード化処理 / Code processing of characters
             self.Target_Object_list.append([img_name, ans])
             
@@ -123,15 +125,10 @@ class MainFunctionUnit_Generator():
         # グラフ画像をJPEG形式で保存 / Save graph image in JPEG format
         A.draw(f"{self.save_folder_path}/{file_name}.eps")
 
+    OBJECT_TYPE_IDS = {'ingredients': 'F', 'container': 'C', 'machine': 'M', 'tool': 'T'}
+
     def select_ids_by_object_type(self, obj):
-        if obj['type'] == 'ingredients':
-            return 'F'
-        elif obj['type'] == 'container':
-            return 'C'
-        elif obj['type'] == 'machine':
-            return 'M'
-        elif obj['type'] == 'tool':
-            return 'T'
+        return self.OBJECT_TYPE_IDS.get(obj['type'])
 
     def Generate_Target_Object_node(self, object_list, object_ID, motion):
         """
@@ -174,13 +171,9 @@ class MainFunctionUnit_Generator():
         }
         dot.add_node(object_ID_num, **node_attributes)
         
-        input(object_list)
-        input(object_ID)
-        
         # Add object nodes and create edges from motion node to each object node
         for i, obj in enumerate(object_list):
             #オブジェクトの種類よってID別け
-            input(obj)
             sub_id = self.select_ids_by_object_type(obj)
             obj_ID_num = object_ID + '_' + sub_id + '_' + str(i).zfill(3)
             # input(f"obj:{obj}, i:{i}")
@@ -226,7 +219,11 @@ class MainFunctionUnit_Generator():
             # input(Target_Object[1][0]['object'])
             if Target_Object[1][0]['object'] != None and Target_Object[1][0]['object'] != 'None':
                 print(f'---------------{i}/{len(Target_Object_list)-1}-------------------------')
-                if i == 23 or i == 24:
+                # 未対応のオブジェクトタイプ（完成品の 'dish' など）を含む場合はスキップ
+                # Skip targets with unsupported object types (e.g. 'dish' for a finished-product shot)
+                unsupported = [obj['type'] for obj in Target_Object[1][0]['object'] if obj['type'] not in self.OBJECT_TYPE_IDS]
+                if unsupported:
+                    print(f'Skipping {Target_Object[0]}: unsupported object type(s) {unsupported}')
                     continue
                 self.G_list.append(self.Generate_Target_Object_node(Target_Object[1][0]['object'], object_ID, Target_Object[1][0]['motion']))
             else:
@@ -285,13 +282,14 @@ class MainFunctionUnit_Generator():
             
     def main(self, input_folder, V_title):
         self.V_title = V_title
+        self.input_folder = input_folder
         file_list = os.listdir(input_folder)
         img_list = [i for i in file_list if 'combined_image' in i]
         word_pickle = [i for i in file_list if 'word_dic' in i]
-        with open(os.path.join(input_folder, word_pickle[0])) as file:
+        with open(os.path.join(input_folder, word_pickle[0]), 'rb') as file:
             word_dic = pickle.load(file)
         word_list = [word_dic[word][0] for word in word_dic.keys()]
-        prompt_path = os.path.join(input_folder, '../../../prompt/setup')
+        prompt_path = os.path.join(REPO_ROOT, 'prompt', 'setup')
         save_file_path = os.path.join(prompt_path, '../input_target_object.pickle')
         Object_list_folder = os.path.join(input_folder, '../Object_folder')
         os.makedirs(Object_list_folder, exist_ok=True)

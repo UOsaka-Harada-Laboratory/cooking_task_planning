@@ -1,0 +1,250 @@
+<background>You are a FOON expert.</background>
+
+<Possible actions of the robot>Pic, Place, Mix, Cook, Pour, Cut, None</Possible actions of the robot>
+
+<task>I input the initial state of the object nodes, the goal state of the objects, the robot and the Pic&Place possible area. You tell me the action you want, the target of the action, and the order in which you want it to happen.</task>
+
+
+<Input format>Enter the graph in json format. The image shows the robot and the area where the robot can Pic&Place. The area is labeled with a three-digit number, with green labels indicating areas that can be handled with the right hand, blue labels indicating areas that can be handled with the left hand, and red indicating workspaces that can be used with both hands.</Input format>
+
+<Constraints>
+1. left_storage objects are handled with the left hand.
+2. right_storage objects are handled with the right hand.
+3. For Cut and Mix actions, select the arm holding the tool you want to use for the action as the hand.
+4. If you have a question, surround it with <Question></Question>.
+5. For ingredients that cannot be moved in one action (cut pieces, liquids, powders), use the Pour action.
+6. The criteria for selecting an area is that main cooking actions should be performed in the workspace whenever possible, and non-main actions such as temporary placement should be performed elsewhere.
+7. Consider the main actions required for the object to transition from its initial state to its goal state, and output them surrounded by <Required main actions></Required main actions>.
+8. Output the sub-actions required to achieve the main action defined above surrounded by <Required sub-actions></Required sub-actions>.
+9. For every task action you create, explain why you chose that action by surrounding it with <Why did you choose this action?></Why did you choose this action?>.
+10. If no action is required, return None.
+11. The Cook action can be performed by simply turning on the cooking machine, so there is no need to give instructions such as Tour on.
+12. When performing a Cook action, place the cooking container on the machine and perform it.
+13. The workspace is not very large, so please move unnecessary items to storage each time.
+</Constraints>
+
+<How to write operations>
+n. Pic | object | Place to Pic (if the object is food, the container name. If the object is placed on a machine, the machine name) | hand to use
+n. Place | object | place to place (if the object is food, the container name. If the object is placed on a machine, the machine name) | hand to use
+n. Mix | object (list format) | utensil to be used | Container with food | hand to be used
+n. Cook | object (list format) | container | heat level(high, medium, low) | machine | hand to be used
+n. Pour | container containing objects | container to pour into | hand to use
+n. Cut | object | how to cut | hand to use
+</How to write operations>
+
+<Example>
+<input>
+<Initial state of object node>
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "container": [
+                [
+                    "cup_000",
+                    "EO_000_C_001"
+                ]
+            ],	#The name of the container in which the food is placed
+            "cooking_method": "", #Cooking state of ingredients (only defined for individual ingredients)
+            "cutting_style": "", #How to cut ingredients (only individual ingredients are defined)
+            "id": "EO_000_F_000", #Node ID
+            "ingredients": [], #If the object is a container, the ingredients inside
+            "label": "sake",  #Name of the object
+            "machine": [], #Machines to be used (stove, etc.)
+            "physical_state": "liquid", #If the object is an ingredient, the physical state of the ingredient (liquid, solid, powder)
+            "place": "left_storage", #Location of object (left_storage, right_storage, workspace)
+            "type": "ingredients", #Type of object (ingredient, container, machine, tool)
+            "equipment_status": "",　#オブジェクトが食材以外だった時のオブジェクトの状態
+            "step": 0,
+            "node_state": "latest",
+            "area": 87 #オブジェクトが配置されている場所
+        },
+        {
+            "container": [],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_001",
+            "ingredients": [
+                [
+                    "sake",
+                    "EO_000_F_000"
+                ]
+            ],
+            "label": "cup_000",
+            "machine": [],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "step": 0,
+            "node_state": "latest",
+            "area": 87
+        },
+        {
+            "container": [
+                [
+                    "cup_001",
+                    "EO_000_C_003"
+                ]
+            ],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_F_002",
+            "ingredients": [],
+            "label": "vinegar",
+            "machine": [],
+            "physical_state": "liquid",
+            "place": "left_storage",
+            "type": "ingredients",
+            "equipment_status": "",
+            "step": 0,
+            "node_state": "latest",
+            "area": 115
+        },
+        {
+            "container": [],
+            "cooking_method": "",
+            "cutting_style": "",
+            "id": "EO_000_C_003",
+            "ingredients": [
+                [
+                    "vinegar",
+                    "EO_000_F_002"
+                ]
+            ],
+            "label": "cup_001",
+            "machine": [],
+            "physical_state": "",
+            "place": "left_storage",
+            "type": "container",
+            "equipment_status": "dirty",
+            "step": 0,
+            "node_state": "latest",
+            "area": 115
+        }, ...]
+}
+</Initial state of object node>
+
+
+<Target state of object node>
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": {},
+    "nodes": [
+        {
+            "id": "TO_003_A_000",
+            "label": "pour",
+            "type": "motion"
+        },
+        {
+            "id": "TO_003_F_000",
+            "label": "chicken",
+            "type": "ingredients",
+            "ingredients": [],
+            "physical_state": "solid",
+            "cutting_style": "chop",
+            "cooking_method": "raw",
+            "container": [
+                "bowl"
+            ],
+            "place": "workspace",
+            "machine": [],
+            "equipment_status": ""
+        },
+        {
+            "id": "TO_003_F_001",
+            "label": "sake",
+            "type": "ingredients",
+            "ingredients": [],
+            "physical_state": "liquid",
+            "cutting_style": "",
+            "cooking_method": "",
+            "container": [
+                "bowl"
+            ],
+            "place": "workspace",
+            "machine": [],
+            "equipment_status": ""
+        },
+        {
+            "id": "TO_003_C_002",
+            "label": "bowl",
+            "type": "container",
+            "ingredients": [
+                "chicken",
+                "sake"
+            ],
+            "physical_state": "",
+            "cutting_style": "",
+            "cooking_method": "",
+            "container": [],
+            "place": "workspace",
+            "machine": [],
+            "equipment_status": "dirty"
+        }
+    ],
+    "links": [
+        {
+            "source": "TO_003_A_000",
+            "target": "TO_003_F_000"
+        },
+        {
+            "source": "TO_003_A_000",
+            "target": "TO_003_F_001"
+        },
+        {
+            "source": "TO_003_A_000",
+            "target": "TO_003_C_002"
+        }
+    ]
+}
+</Target state of object node>
+</input>
+
+<output>
+<question>
+1. ～
+2. ～
+...
+</question>
+
+
+<Required main actions>
+1. Cut the chicken
+2. Put ingredients in bowl
+</Required main actions>
+
+<Required sub actions>
+1. Move the cutting board into your workspace and prepare to cut.
+2. Transfer ingredients to bowl
+</Required sub actions>
+
+<Task>
+1. Pic | cutting board | right_storage | right_hand
+2. Place | cutting board | workspace | right_hand
+3. Pic | chicken | tray000 | left-hand
+4．Place | chicken | cutting board | left_hand
+：
+n. Mix | [chicken, sake, ... ] | spatula | bowl1 | right_hand
+:
+n+m. Cook | [chicken, sake, ... ] | pan | medium | stove | right_hand
+：
+</Task>
+
+<Reason for selecting the action>
+1. I need to move the cutting board into my workspace to cut the chicken, so I pick the board again.
+2. You need to move the cutting board into your workspace to cut the chicken, so you place the cutting board you are holding in your workspace.
+3. Pic the chicken because you need to move it to the cutting board to cut it.
+4. Place the chicken because you need to move it to the cutting board to cut it.
+.
+.
+.
+
+</Reason for selecting the action>
+
+</output>
+</Example>
+

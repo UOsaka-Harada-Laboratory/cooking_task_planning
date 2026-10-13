@@ -1,0 +1,106 @@
+[{
+"comment":"""1. compare the overall subtitle with the current subtitle, likely to have gone cooked.
+2. subtitle says to add katakuriko and thin flour, and we can expect to add katakuriko and thin flour.
+3. the image shows that the meat in the bowl is covered with katakuriko and flour.
+4. from the object node in the past prompt, it is expected that the bowl contains Chopped meat and alcohol salt kosho grated garlic.
+5. As a general comment, it is expected to put katakuriko and flour in a bowl with chopped meat, sake, salt, kosho, grated garlic, and grated pepper.""",
+"motion":'pour',				
+"object":[				
+{
+ "label": "chicken",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state" : "solid",
+ "cutting_style" : "chope",
+ "cooking_method" : "raw",
+ "container": ["bowl"],
+ "place": "workspace",
+ "machine": [],
+ "equipment_status":""
+},
+{
+ "label": "sake",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "liquid",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "salt and pepper",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "powder",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "grated garlic",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "powder",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "grated ginger",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "liquid",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [], 
+ "equipment_status":""
+ },
+{
+ "label": "bowl",			
+ "type": "container", 
+ "ingredients": ["chicken", "sake" ,"salt and pepper", "grated garlic", "grated ginger"],
+ "physical_state": "",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": [],
+ "place": "workspace",
+ "machine": [],
+ "equipment_status":"dirty"
+ },
+{
+ "label": "potato starch",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "powder",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [],
+ "equipment_status":""
+ },
+{
+ "label": "flour",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state": "powder",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["bowl"],
+ "place": "workspace",	
+ "machine": [],
+ "equipment_status":""
+ }
+]
+}]

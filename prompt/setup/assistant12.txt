@@ -1,0 +1,58 @@
+[{
+"comment":"""1. comparing the overall subtitle with the current subtitle, we can expect the food to be cooked on heat.
+2. subtitle says “in a pan heated with salad oil” and we can expect salad oil to be heated in a pan.
+3. the image suggests that the meat is expected to be placed on the pan.
+4. from the object node of the past prompt, we can expect to find Chopped meat mixed with sake salt kosho grated garlic grated pepper katakuriko flour and flour on the pan.
+5.Overall, we judge that Chopped meat is cooked.""",
+"motion":"cook",				
+"object":[				
+{
+ "label": "chicken",
+ "type": "ingredients",
+ "ingredients": [],
+ "physical_state" : "solid",
+ "cutting_style" : "chope",
+ "cooking_method" : "cooked",
+ "container": ["pan"],
+ "place": "workspace",
+ "machine": ["stove"],
+ "equipment_status":""
+},
+{
+ "label": "oil",			
+ "type": "ingredients",	
+ "ingredients": [],
+ "physical_state" : "liquid",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["pan"],
+ "place": "workspace",
+ "machine": ["stove"],
+ "equipment_status":""	
+},
+{
+ "label": "pan",			
+ "type": "container",	
+ "ingredients": ["chicken", "oil"],
+ "physical_state" : "",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": [],
+ "place": "workspace",
+ "machine": ["stove"],
+ "equipment_status":"dirty"			
+},
+{
+ "label": "stove",			
+ "type": "machine",
+ "ingredients": ["chicken", "oil"],
+ "physical_state" : "",
+ "cutting_style" : "",
+ "cooking_method" : "",
+ "container": ["pan"],
+ "place": "workspace",
+ "machine": [],
+ "equipment_status":"on"			
+}
+]
+}]

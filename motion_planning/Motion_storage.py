@@ -12,13 +12,13 @@ import math
 import basis.robot_math as rm
 import modeling.geometric_model as gm
 import signal
-import keyboard
+from collections import defaultdict
 import time
 import robot_sim.end_effectors.gripper.robotiqhe.robotiqhe as rtq
 import robot_sim.robots.ur3e_dual.ur3e_dual as ur
 import ObjectModelConfigManager
 import motion.probabilistic.rrt_connect as rrtc
-import winsound
+from panda3d.core import KeyboardButton
 
         
 class WRSA_motion_storage():
@@ -29,7 +29,6 @@ class WRSA_motion_storage():
         author: weiwei, hao
         date: 20191122, 20210113
         """
-        self.base = wd.World(cam_pos=[5,0,3],lookat_pos=[0,0,1])
         self.robot_s = ur.UR3EDual()
         self.first_jnt_values = {'rgt_hnd':self.robot_s.get_jnt_values('rgt_hnd'), 'lft_hnd':self.robot_s.get_jnt_values('lft_hnd')}
         self.gen_model = self.robot_s.gen_meshmodel()
@@ -878,9 +877,7 @@ class WRSA_motion_storage():
                                                                 toggle_sphere=toggle_sphere
                                                                 )
             if conf_list_middle is None:
-                winsound.Beep(1000, 200)  # 周波数1000Hzの音を0.5秒鳴らす
-                winsound.Beep(1000, 200)  # 周波数1000Hzの音を0.5秒鳴らす
-                winsound.Beep(1000, 200)  # 周波数1000Hzの音を0.5秒鳴らす
+                Fm.beep(3)  # 通知音
                 if count >= 2:
                     break
                 print(f"Cannot generate the rrtc part of the holding approach motion!")
@@ -1155,7 +1152,7 @@ class WRSA_motion_storage():
             objcm.set_rotmat(rot)
             goal_homomat_list = [objcm.get_homomat()]
             # self.base.run()
-            conf_list, jawwidth_list, objpose_list, grasp_id_sub = self.Pic_motion(hnd_name, objcm, start_conf, end_conf, grasp_info_list, goal_homomat_list, [], grasp_id=grasp_id[1], toggle_sphere=False, toggle_grasp=False)
+            conf_list, jawwidth_list, objpose_list, grasp_id_sub = self.Pic_motion(hnd_name, objcm, start_conf, end_conf, grasp_info, goal_homomat_list, [], grasp_id=grasp_id[1], toggle_sphere=False, toggle_grasp=False)
             if conf_list is not None:
                 return conf_list, jawwidth_list, objpose_list, [grasp_id[0]+i, grasp_id_sub]
         return None, None, None
@@ -1572,12 +1569,12 @@ class WRSA_motion_storage():
             object_attached_list.append(objb_copy)
             for obs in obstacle_list:
                 obs_copy = obs.copy()
-                obs_copy.attach_to(base)
-                obstacle_attache_list.append(objb_copy)
+                obs_copy.attach_to(self.base)
+                obstacle_attache_list.append(obs_copy)
             counter[0] += 1
     
             # Enterキーが押されたかチェック
-            if keyboard.is_pressed("ctrl"):
+            if self.base.mouseWatcherNode.is_button_down(KeyboardButton.control()):
                 detach_all_objects()
                 print("You pressed ctrl!")
                 while True:
@@ -1623,11 +1620,12 @@ class WRSA_motion_storage():
         motion_counter = [1]
         
         # input(obj_model_dic.keys())
-        color_dic = {"EO_000_C_010":[0.75,0.75,0.75,1], "EO_000_C_011":[0.75,0.75,0.75,1], 'EO_000_C_012':[0.75,0.75,0.75,1],
+        # 元の実験環境用の色。他の環境のオブジェクトはグレーで表示 / objects not listed (other environments) are drawn grey
+        color_dic = defaultdict(lambda: [0.75,0.75,0.75,1], {"EO_000_C_010":[0.75,0.75,0.75,1], "EO_000_C_011":[0.75,0.75,0.75,1], 'EO_000_C_012':[0.75,0.75,0.75,1],
                      'EO_000_T_016':[0.75,0.75,0.75,1], 'EO_000_T_015':[0.75,0.75,0.75,1], 'EO_000_C_001':[0.75,0.75,0.75,1],
                      "EO_000_C_003":[0.75,0.75,0.75,1], 'EO_000_C_005':[0.75,0.75,0.75,1], 'EO_000_C_007':[0.75,0.75,0.75,1], 
                      'EO_000_F_002':[0, 0, 0, 0], 'EO_000_F_004':[0, 0, 0, 0], 'EO_000_F_006':[1,1,1,1], 
-                     'EO_000_F_008':[1,0,0,1], 'EO_000_M_017':[0.75,0.75,0.75,1], 'EO_000_C_009':[0.75,0.75,0.75,1]}
+                     'EO_000_F_008':[1,0,0,1], 'EO_000_M_017':[0.75,0.75,0.75,1], 'EO_000_C_009':[0.75,0.75,0.75,1]})
         
         task_name = "update"  # タスク名を変数に格納
         
@@ -1736,7 +1734,7 @@ class WRSA_motion_storage():
             counter[0] += 1
     
             # Enterキーが押されたかチェック
-            if keyboard.is_pressed("ctrl"):
+            if self.base.mouseWatcherNode.is_button_down(KeyboardButton.control()):
                 detach_all_objects()
                 print("You pressed ctrl!")
                 while True:
@@ -1791,7 +1789,6 @@ class WRSA_motion_storage():
     
 if __name__ == '__main__':
     import time
-    import robot_sim.robots.yumi.yumi as ym
     import visualization.panda.world as wd
     import modeling.geometric_model as gm
     import modeling.collision_model as cm

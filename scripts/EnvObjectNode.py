@@ -168,15 +168,15 @@ class EnvObjectNode:
         return selected_values
         
     def set_Object_Location(self):
-        current_path = os.path.dirname(os.path.abspath(__file__))
-        temp_folder = os.path.join(current_path, 'prompt/template/node.pickle')
+        repo_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
+        temp_folder = os.path.join(repo_root, 'prompt', 'template', 'node.pickle')
 
         with open(temp_folder, 'rb') as file:
             temp = pickle.load(file)
 
         obj_num = 0
         
-        self.get_available_area('./wrs_reachability/ave_point2.csv')
+        self.get_available_area(os.path.join(repo_root, 'wrs_reachability', 'ave_point2.csv'))
         
         ### ingredientsノードをセット / Set ingredient nodes
             ### 液体の材料 / Liquid ingredients
@@ -324,9 +324,9 @@ class EnvObjectNode:
         return os.path.join(Enviroment_folder, 'EO000.json')
         
 if __name__ == '__main__':
-    with open(os.path.join("./images/Objects_folder", 'G_list.pickle'), 'rb') as file:
+    with open(os.path.join("./images/Object_folder", 'G_list.pickle'), 'rb') as file:
         G = pickle.load(file)
     EO = EnvObjectNode()
-    Object_folder = "./images/Objects_folder"
+    Object_folder = "./images/Object_folder"
     EO_json_path = EO.main(G, Object_folder)
     graph = EO.enviroment_node

@@ -1,0 +1,9 @@
+[{
+"comment":"""1. compare the entire subtitle with the current subtitle, and since it is the first subtitle, it is most likely a food introduction.
+2. subtitle says fried and easy, and may be fried and baked.
+3. from the image, it can be expected that they are deep-fried and baked.
+4. Since the object node of the past prompt is the first one, there is no dependency relationship.
+5. As a general comment, it is an introductory video of cooking, since the cooking movement is not the first cooking operation such as frying.""",
+"motion":None,				
+"object":None
+}]
