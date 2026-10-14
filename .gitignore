@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+
+# Pipeline outputs (README paths) and files written to the working directory
+/images/
+/graph.eps
+
+# Not distributed: recorded experiment data and few-shot video frames
+/test/
+/prompt/setup/image*.jpg
