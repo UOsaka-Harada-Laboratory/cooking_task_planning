@@ -86,7 +86,7 @@ sections:
     components:
       - type: "youtube_video"
         title: "Demo Video"
-        url: "https://www.youtube.com/watch?v=n3spw0j8oZs"
+        url: "https://www.youtube.com/embed/n3spw0j8oZs?si=H9psbfyMQi6QWmlo"
         description: "Planning and executing the cooking task for a pork rice bowl."
 
   # - id: "introduction"
