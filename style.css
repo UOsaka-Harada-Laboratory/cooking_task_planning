@@ -272,9 +272,9 @@ h2 {
 }
 
 .carousel-slide {
-  flex: 0 0 calc(33.333% - 20px);
+  flex: 0 0 calc(100% / var(--slides-per-view, 3) - 20px);
   margin: 0 10px;
-  height: 300px;
+  height: var(--slide-height, 300px);
 }
 
 .carousel-slide img,
@@ -284,6 +284,11 @@ h2 {
   object-fit: cover;
   border-radius: 8px;
   border: none;
+}
+
+/* Show whole figures in image carousels instead of cropping them */
+.image-carousel .carousel-slide img {
+  object-fit: contain;
 }
 
 .carousel-button {

@@ -42,7 +42,7 @@ class Carousel {
     if (!this.track || this.slides.length === 0) return;
 
     this.currentIndex = 0;
-    this.slidesPerView = 3;
+    this.slidesPerView = parseInt(element.dataset.slidesPerView, 10) || 3;
     this.totalSlides = Math.ceil(this.slides.length / this.slidesPerView);
     this.interval = interval;
     this.autoPlayTimer = null;
@@ -582,9 +582,12 @@ function renderComponent(comp) {
           `<div class="carousel-slide"><img src="${img}" alt="Slide ${idx + 1}" /></div>`
       )
       .join("");
+    // Optional per-carousel layout: slides_per_view (default 3) and slide height (default 300px)
+    const spv = parseInt(comp.slides_per_view, 10) || 3;
+    const height = comp.height ? String(comp.height).trim() : "300px";
     return `
       ${comp.title ? `<h3>${comp.title}</h3>` : ""}
-      <div class="carousel-container image-carousel">
+      <div class="carousel-container image-carousel" data-slides-per-view="${spv}" style="--slides-per-view: ${spv}; --slide-height: ${height};">
         <div class="carousel-track">${slides}</div>
         <button class="carousel-button prev">←</button>
         <button class="carousel-button next">→</button>

@@ -108,6 +108,8 @@ sections:
     components:
       - type: "image_carousel"
         title: "Steps"
+        slides_per_view: 1 # Optional: images shown at once (default 3)
+        height: "450px" # Optional: carousel height (default "300px")
         images:
           - "Assets/Fig1.png"
           - "Assets/Fig2.png"
