@@ -94,7 +94,7 @@ sections:
   #   nav_label: "Introduction"
   #   content: "TODO: Add Introduction"
 
-   - id: "methodology"
+  - id: "methodology"
     title: "Methodology"
     nav_label: "Methodology"
     content: "Our method proposes to plan cooking tasks from videos with subtitles by using LLMs. From the video, the LLM is prompted to generate Target Object Nodes, a structured representation (Functional Unit) of an action, the required tools and the object transformation after the action. Then, another LLM instance is given information of the current environment as an Environment Object Node, and tasked with predicting the actions to achieve the same state as the Target Object Node. This structure allows us to construct a Functional Object-Oriented Network (FOON), which is a structured graph representation that allows us validate the actions and re-plan in case of failures."
